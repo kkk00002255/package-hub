@@ -51,8 +51,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Best-in-class reasoning, code and conversation.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gpt-5.5-deep",
@@ -61,8 +61,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Maximum depth for hard problems.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gpt-5.5-high",
@@ -71,8 +71,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Long, careful chains of thought.",
-      "upstream": "deepseek-v4-pro",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gpt-5.4-mini",
@@ -81,8 +81,8 @@
       "category": "chat",
       "tier": "fast",
       "tagline": "Fast, cheap, surprisingly capable.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gpt-5.4-nano",
@@ -91,8 +91,8 @@
       "category": "chat",
       "tier": "lite",
       "tagline": "Ultra-low latency for bulk workloads.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "opus-4-7",
@@ -101,8 +101,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Long context, nuanced writing, careful reasoning.",
-      "upstream": "deepseek-v4-pro",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "opus-4-8",
@@ -111,8 +111,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Our most thoughtful model yet.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "sonnet-4-5",
@@ -121,8 +121,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "The workhorse for everyday intelligence.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gemini-3-pro",
@@ -131,8 +131,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Multimodal reasoning at frontier scale.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "gemini-3.5-flash",
@@ -141,8 +141,8 @@
       "category": "chat",
       "tier": "fast",
       "tagline": "Speed and quality in one package.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "deepseek-v4-pro",
@@ -151,7 +151,7 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Open-weight champion, top reasoning per dollar.",
-      "upstream": "deepseek-v4-flash",
+      "upstream": "deepseek-v4-pro",
       "upstreamVendor": "DeepSeek"
     },
     {
@@ -171,8 +171,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Multilingual powerhouse, top Chinese reasoning.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "qwen-3.7-plus",
@@ -181,8 +181,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Balanced speed and depth.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "qwen-3.6-plus",
@@ -191,8 +191,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Trusted classic.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "glm-5.2",
@@ -201,8 +201,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Strong agent and tool use.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "step-3.7-flash",
@@ -211,8 +211,8 @@
       "category": "chat",
       "tier": "fast",
       "tagline": "Ultra-fast responses.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "mimo-v2.5-pro",
@@ -221,8 +221,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Compact, capable, multilingual.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "minimax-m3",
@@ -231,8 +231,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Balanced general intelligence.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "minimax-m2.7",
@@ -241,8 +241,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Previous-gen workhorse.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "grok-4.20",
@@ -251,8 +251,8 @@
       "category": "chat",
       "tier": "flagship",
       "tagline": "Real-time knowledge with attitude.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "grok-4.3",
@@ -261,8 +261,8 @@
       "category": "chat",
       "tier": "pro",
       "tagline": "Fast, witty, web-connected.",
-      "upstream": "deepseek-v4-flash",
-      "upstreamVendor": "DeepSeek"
+      "upstream": null,
+      "upstreamVendor": null
     },
     {
       "id": "banana-2",

@@ -40,7 +40,16 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server not configured' });
   }
 
-  const model = (body && body.model) || 'deepseek-v4-flash';
+  // Whitelist: only the two real DeepSeek models may hit the upstream.
+  // All other model IDs (GPT-5.5, Claude Opus, etc.) are UI-only mock entries.
+  const ALLOWED_MODELS = ['deepseek-v4-flash', 'deepseek-v4-pro'];
+  const requestedModel = (body && body.model) || 'deepseek-v4-flash';
+  if (!ALLOWED_MODELS.includes(requestedModel)) {
+    return res.status(400).json({
+      error: `Model "${requestedModel}" is not available in this build. Only ${ALLOWED_MODELS.join(', ')} are wired to a real upstream.`
+    });
+  }
+  const model = requestedModel;
   const maxTokens = Math.min(MAX_TOKENS_CAP, Number(body && body.max_tokens) || 2000);
 
   const controller = new AbortController();
