@@ -16,6 +16,9 @@ const messages = ref([
 
 const selected = computed(() => models.models.find(m => m.id === selectedId.value) || models.models[0])
 
+// True if the selected model has a real upstream configured
+const isLive = computed(() => !!selected.value.upstream)
+
 const grouped = computed(() => {
   return models.categories.map(c => ({
     ...c,
@@ -23,16 +26,61 @@ const grouped = computed(() => {
   })).filter(c => c.items.length)
 })
 
-function send() {
+async function send() {
   const text = input.value.trim()
-  if (!text) return
+  if (!text || sending.value) return
+
   messages.value.push({ role: 'user', text })
   input.value = ''
   sending.value = true
-  setTimeout(() => {
-    messages.value.push({ role: 'assistant', text: t('try.demo.reply', { m: selected.value.name }) })
+
+  // If the model has no upstream, fall back to mock (so the demo isn't broken for non-chat categories)
+  if (!isLive.value) {
+    setTimeout(() => {
+      messages.value.push({
+        role: 'assistant',
+        text: t('try.demo.reply', { m: selected.value.name })
+      })
+      sending.value = false
+    }, 900)
+    return
+  }
+
+  // Real call: build conversation history (only user/assistant pairs, skip system message)
+  const history = messages.value
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => ({ role: m.role, content: m.text }))
+
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: history,
+        model: selected.value.upstream
+      })
+    })
+
+    let data
+    try { data = await r.json() } catch { throw new Error('Invalid response from server') }
+
+    if (!r.ok) {
+      throw new Error(data.error || `HTTP ${r.status}`)
+    }
+
+    messages.value.push({
+      role: 'assistant',
+      text: data.result || t('try.empty')
+    })
+  } catch (e) {
+    messages.value.push({
+      role: 'assistant',
+      text: `⚠️ ${e.message || t('try.error')}`,
+      error: true
+    })
+  } finally {
     sending.value = false
-  }, 900)
+  }
 }
 </script>
 
@@ -71,7 +119,11 @@ function send() {
               <div class="text-xs text-ink-500">{{ t('try.workspace') }}</div>
               <div class="text-sm font-semibold text-white">{{ selected.name }} <span class="text-ink-500 font-normal">· {{ selected.vendor }}</span></div>
             </div>
-            <span class="chip"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> {{ t('try.status.ready') }}</span>
+            <span class="chip" :class="isLive ? '' : 'opacity-60'">
+              <span class="h-1.5 w-1.5 rounded-full"
+                    :class="isLive ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+              {{ isLive ? t('try.status.live') : t('try.status.demo') }}
+            </span>
           </div>
 
           <div class="flex-1 px-5 py-6 space-y-4 overflow-y-auto">
