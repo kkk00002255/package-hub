@@ -204,11 +204,16 @@ export default {
   'try.sidebar': '模型',
   'try.workspace': '工作区',
   'try.status.ready': '就绪',
+  'try.status.live': '已接通',
+  'try.status.demo': '演示',
   'try.system': '演示工作区 — 你的消息不会被保存，也不会发给任何模型。要真正联通，请在 `src/api/` 里配置你的上游 API 密钥。',
   'try.input.placeholder': '提问，或描述你想要生成的内容……',
   'try.thinking': '{m} 正在思考…',
   'try.demo.reply': '（{m} 会在这里回复。接上你的上游 API 密钥即可，详见 README。）',
   'try.note': '仅为演示。在',
+  'try.noteLive': '已接通 · 通过 {upstream} 路由',
+  'try.error': '请求失败',
+  'try.empty': '（模型没输出）',
 
   // common
   'common.flagship': '★',

@@ -204,11 +204,16 @@ export default {
   'try.sidebar': 'Models',
   'try.workspace': 'Workspace',
   'try.status.ready': 'Ready',
+  'try.status.live': 'Live',
+  'try.status.demo': 'Demo',
   'try.system': 'Demo workspace — your messages here are not persisted and not sent to any model yet. Wire up your API key in `src/api/` to go live.',
   'try.input.placeholder': 'Ask anything, or describe what you want to generate…',
   'try.thinking': '{m} is thinking…',
   'try.demo.reply': '({m} would respond here. Plug in your upstream API key — see README.)',
   'try.note': 'Demo only. Connect your upstream key in',
+  'try.noteLive': 'Live · routed via {upstream}',
+  'try.error': 'Request failed',
+  'try.empty': '(empty response)',
 
   // common
   'common.flagship': '★',

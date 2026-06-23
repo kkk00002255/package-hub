@@ -84,7 +84,9 @@ function send() {
                 v-if="m.role !== 'system'"
                 :class="[
                   'max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
-                  m.role === 'user' ? 'bg-brand-gradient text-white' : 'bg-white/5 border border-white/10 text-ink-100'
+                  m.role === 'user' ? 'bg-brand-gradient text-white'
+                    : m.error ? 'bg-red-500/10 border border-red-500/30 text-red-200'
+                    : 'bg-white/5 border border-white/10 text-ink-100'
                 ]"
               >{{ m.text }}</div>
               <div v-else class="mx-auto max-w-md text-center text-[11px] text-ink-500 italic">{{ m.key ? t(m.key) : m.text }}</div>
@@ -112,7 +114,13 @@ function send() {
               </button>
             </div>
             <p class="mt-2 px-1 text-[11px] text-ink-500">
-              <Sparkles class="inline h-3 w-3 -mt-0.5" /> {{ t('try.note') }} <code class="text-ink-400">src/api/</code>
+              <Sparkles class="inline h-3 w-3 -mt-0.5" />
+              <template v-if="isLive">
+                {{ t('try.noteLive', { upstream: selected.upstream }) }}
+              </template>
+              <template v-else>
+                {{ t('try.note') }} <code class="text-ink-400">src/api/</code>
+              </template>
             </p>
           </form>
         </div>
