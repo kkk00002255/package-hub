@@ -7,9 +7,10 @@ const { t } = useI18n()
 
 // Static tier meta: name (i18n key), price (i18n key), cadence (i18n key), desc (i18n key), cta (i18n key), features (i18n keys), href, highlight, badge (i18n key, optional)
 const tierDefs = [
-  { id: 'free', featureKeys: ['pricing.free.f1', 'pricing.free.f2', 'pricing.free.f3', 'pricing.free.f4'], href: '/try', highlight: false },
-  { id: 'pro',  featureKeys: ['pricing.pro.f1',  'pricing.pro.f2',  'pricing.pro.f3',  'pricing.pro.f4',  'pricing.pro.f5'],  href: '/try', highlight: true,  badgeKey: 'pricing.pro.badge' },
-  { id: 'team', featureKeys: ['pricing.team.f1', 'pricing.team.f2', 'pricing.team.f3', 'pricing.team.f4', 'pricing.team.f5'], href: '#',    highlight: false }
+  { id: 'free',       featureKeys: ['pricing.free.f1', 'pricing.free.f2', 'pricing.free.f3', 'pricing.free.f4'], href: '/try', highlight: false },
+  { id: 'pro',        featureKeys: ['pricing.pro.f1',  'pricing.pro.f2',  'pricing.pro.f3',  'pricing.pro.f4',  'pricing.pro.f5'],  href: '/try', highlight: true,  badgeKey: 'pricing.pro.badge' },
+  { id: 'team',       featureKeys: ['pricing.team.f1', 'pricing.team.f2', 'pricing.team.f3', 'pricing.team.f4', 'pricing.team.f5'], href: '#',    highlight: false },
+  { id: 'enterprise', featureKeys: ['pricing.enterprise.f1', 'pricing.enterprise.f2', 'pricing.enterprise.f3', 'pricing.enterprise.f4', 'pricing.enterprise.f5'], href: 'mailto:sales@package.ai?subject=Enterprise%20inquiry', highlight: false }
 ]
 
 const tiers = computed(() =>
@@ -40,7 +41,7 @@ const tiers = computed(() =>
         </p>
       </div>
 
-      <div class="mt-14 grid gap-5 lg:grid-cols-3">
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div
           v-for="tier in tiers"
           :key="tier.name"
