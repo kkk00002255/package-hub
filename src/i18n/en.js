@@ -4,6 +4,7 @@ export default {
   'nav.pricing': 'Pricing',
   'nav.agents': 'Agents',
   'nav.inspiration': 'Inspiration',
+  'nav.faq': 'FAQ',
   'nav.support': 'Support',
   'nav.developer': 'Developer',
   'nav.getStarted': 'Get started',
@@ -64,6 +65,25 @@ export default {
   'cta.primary': 'Start free',
   'cta.secondary': 'Talk to support',
   'cta.fineprint': 'No credit card required · Free tier every day',
+
+  // FAQ
+  'faq.eyebrow': 'FAQ',
+  'faq.title1': 'Questions,',
+  'faq.title2': 'answered.',
+  'faq.desc': "Everything you need to know before you start. Can't find what you're looking for? Email us.",
+  'faq.q1': 'How is Package different from going directly to OpenAI, Anthropic, etc.?',
+  'faq.a1': "Direct accounts give you one model at one price. Package gives you 100+ models behind a single API and a single bill — including models you can't access directly (like Sora 2 or Veo 3.1). You also get a unified chat workspace, side-by-side model comparison, and workflow agents that combine multiple models.",
+  'faq.q2': 'Are the model outputs really from the official providers?',
+  'faq.a2': 'Yes. Package routes requests to the upstream providers — OpenAI, Anthropic, Google, Suno, Runway, and so on. We never silently substitute a model. The vendor and model name are shown in the workspace header.',
+  'faq.q3': "What's the pricing model?",
+  'faq.a3': "Free tier gives you daily credits to try every model. Pro is a flat $19/month for 20× the credits, priority queue, and commercial usage. Team adds shared workspaces, unified billing, and OpenAI-compatible API access. Enterprise is custom — talk to sales.",
+  'faq.q4': 'Can I bring my own API keys?',
+  'faq.a4': "Yes, on Team and Enterprise plans. Point Package at your existing keys and we'll route through them — useful if you already have negotiated enterprise pricing with a provider.",
+  'faq.q5': 'Is my data used to train models?',
+  'faq.a5': "No. Package does not train on your inputs or outputs. Pro and Team plans include a no-train guarantee from each upstream provider.",
+  'faq.q6': 'How do I cancel?',
+  'faq.a6': "From your account settings, one click. No email, no retention calls, no questions. Your subscription stays active until the end of the billing period.",
+  'faq.more': 'Still have questions? Reach us at ',
 
   // footer
   'footer.tagline': 'One platform, every AI model. Built so creators and teams can stop juggling subscriptions and start shipping.',

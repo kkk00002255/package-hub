@@ -13,7 +13,8 @@ const links = [
   { to: '/models',           labelKey: 'nav.models' },
   { to: '/pricing',          labelKey: 'nav.pricing' },
   { to: '/#agents',          labelKey: 'nav.agents' },
-  { to: '/#inspiration',     labelKey: 'nav.inspiration' }
+  { to: '/#inspiration',     labelKey: 'nav.inspiration' },
+  { to: '/#faq',             labelKey: 'nav.faq' }
 ]
 
 const onScroll = () => { scrolled.value = window.scrollY > 8 }

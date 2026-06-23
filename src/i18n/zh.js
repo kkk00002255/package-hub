@@ -4,6 +4,7 @@ export default {
   'nav.pricing': '定价',
   'nav.agents': '智能体',
   'nav.inspiration': '灵感',
+  'nav.faq': '问答',
   'nav.support': '支持',
   'nav.developer': '开发者',
   'nav.getStarted': '立即开始',
@@ -64,6 +65,25 @@ export default {
   'cta.primary': '免费开始',
   'cta.secondary': '联系客服',
   'cta.fineprint': '无需信用卡 · 每天都有免费额度',
+
+  // FAQ
+  'faq.eyebrow': '常见问题',
+  'faq.title1': '你可能想问的，',
+  'faq.title2': '都答了。',
+  'faq.desc': '开始之前你想知道的都在这里。还有问题？直接发邮件给我们。',
+  'faq.q1': 'Package 和直接去 OpenAI、Anthropic 等官网用有什么不同？',
+  'faq.a1': '直接去官网是一个模型一个价。Package 是 100+ 模型、一个 API、一张账单——还包括你直接拿不到的模型（比如 Sora 2、Veo 3.1）。再加统一对话工作区、模型对比、能串多个模型的工作流智能体。',
+  'faq.q2': '模型的输出真的是官方原厂的吗？',
+  'faq.a2': '是。Package 把请求路由到上游厂商——OpenAI、Anthropic、Google、Suno、Runway 等等。我们从不偷换模型。厂商和模型名会显示在工作区顶部。',
+  'faq.q3': '怎么收费？',
+  'faq.a3': '免费版每天送额度，所有模型都能试。专业版 $19/月（按汇率约 ¥99），20× 额度、优先队列、可商用。团队版加共享工作区、统一账单、OpenAI 兼容 API。企业版定制——找销售聊。',
+  'faq.q4': '可以用我自己的 API Key 吗？',
+  'faq.a4': '可以。团队版和企业版支持。把你已有的 Key 接进来，Package 直接走你的 Key——如果你跟某个厂商有企业合约价，这样更划算。',
+  'faq.q5': '我的数据会被拿去训练吗？',
+  'faq.a5': '不会。Package 不会拿你的输入或输出训练。专业版和团队版各上游厂商都有 no-train 保证。',
+  'faq.q6': '怎么取消订阅？',
+  'faq.a6': '账户设置里一键取消，不用发邮件、不用接电话、不用解释。订阅会一直有效到当期结束。',
+  'faq.more': '还有问题？发邮件到 ',
 
   // footer
   'footer.tagline': '一个平台，所有 AI 模型。让创作者和团队不再为订阅奔波，直接开始交付。',
