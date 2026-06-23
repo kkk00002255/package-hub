@@ -52,6 +52,18 @@ export default async function handler(req, res) {
   const model = requestedModel;
   const maxTokens = Math.min(MAX_TOKENS_CAP, Number(body && body.max_tokens) || 2000);
 
+  // Per-model key routing (allows full physical isolation in DeepSeek dashboard):
+  //   deepseek-v4-flash -> DEEPSEEK_API_KEY_FLASH
+  //   deepseek-v4-pro   -> DEEPSEEK_API_KEY_PRO
+  // If either split key is missing, fall back to the shared DEEPSEEK_API_KEY_PACKAGE.
+  const splitKey = model === 'deepseek-v4-flash'
+    ? process.env.DEEPSEEK_API_KEY_FLASH
+    : process.env.DEEPSEEK_API_KEY_PRO;
+  const keyToUse = splitKey || apiKey;
+  if (!keyToUse) {
+    return res.status(500).json({ error: `Server not configured for model ${model}` });
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
@@ -60,7 +72,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${keyToUse}`,
       },
       body: JSON.stringify({
         model,
