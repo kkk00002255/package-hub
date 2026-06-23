@@ -1,0 +1,24 @@
+{
+  "tiles": [
+    { "kind": "image", "title": "Neon Tokyo Alley", "model": "Banana 2 Official", "category": "image", "gradient": "from-fuchsia-500/40 via-violet-600/30 to-cyan-500/30" },
+    { "kind": "image", "title": "Ink-Wash Mountain", "model": "Wanxiang 2.7 Image", "category": "image", "gradient": "from-zinc-200/30 via-zinc-400/20 to-zinc-700/30" },
+    { "kind": "video", "title": "Cinematic Drone Shot", "model": "Sora 2", "category": "video", "gradient": "from-cyan-400/30 via-blue-600/20 to-indigo-800/40" },
+    { "kind": "image", "title": "Studio Portrait, 85mm", "model": "GPT Image 2", "category": "image", "gradient": "from-amber-300/30 via-rose-400/20 to-fuchsia-700/30" },
+    { "kind": "image", "title": "Eiffel Sunset", "model": "Vidu Image 2", "category": "image", "gradient": "from-orange-400/30 via-rose-500/20 to-violet-700/30" },
+    { "kind": "video", "title": "Product Reveal — Sneaker", "model": "Veo 3.1 Lite", "category": "video", "gradient": "from-emerald-400/30 via-cyan-600/20 to-blue-800/30" },
+    { "kind": "image", "title": "Anime Schoolgirl", "model": "GPT Image 2 Pro", "category": "image", "gradient": "from-pink-300/30 via-violet-500/20 to-indigo-700/30" },
+    { "kind": "image", "title": "Old Library", "model": "Banana Pro Official", "category": "image", "gradient": "from-amber-700/30 via-orange-700/20 to-rose-900/30" },
+    { "kind": "image", "title": "Brand Identity Pack", "model": "Qwen Image", "category": "image", "gradient": "from-violet-500/30 via-indigo-600/20 to-slate-800/30" },
+    { "kind": "video", "title": "Cyberpunk Street Race", "model": "Kling 2.6 Pro", "category": "video", "gradient": "from-fuchsia-500/40 via-purple-700/30 to-cyan-600/30" },
+    { "kind": "image", "title": "Hypercar Ad Shot", "model": "Vidu Q3 Turbo", "category": "image", "gradient": "from-red-500/30 via-orange-500/20 to-amber-700/30" },
+    { "kind": "video", "title": "Cozy Cafe Ambience", "model": "Wanxiang 2.7 Video", "category": "video", "gradient": "from-amber-300/30 via-orange-400/20 to-rose-500/30" },
+    { "kind": "image", "title": "Editorial Fashion", "model": "Banana 2 Official", "category": "image", "gradient": "from-stone-200/30 via-stone-400/20 to-stone-700/30" },
+    { "kind": "video", "title": "Mountain Drone Aerial", "model": "Sora 2", "category": "video", "gradient": "from-emerald-400/30 via-teal-600/20 to-slate-800/30" },
+    { "kind": "image", "title": "Modern Living Room", "model": "GPT Image 2 Pro", "category": "image", "gradient": "from-stone-300/30 via-amber-700/20 to-stone-900/30" },
+    { "kind": "image", "title": "Mech Pilot Closeup", "model": "Vidu Image 2", "category": "image", "gradient": "from-slate-300/30 via-blue-700/20 to-slate-900/40" },
+    { "kind": "image", "title": "Quiet Garden Path", "model": "Wanxiang 2.7 Image", "category": "image", "gradient": "from-emerald-300/30 via-emerald-600/20 to-teal-900/30" },
+    { "kind": "video", "title": "Speed Ramp — Athlete", "model": "Veo 3.1", "category": "video", "gradient": "from-orange-400/30 via-rose-500/20 to-fuchsia-800/30" },
+    { "kind": "music", "title": "Lo-fi Beats — Study Mode", "model": "Suno 4.5 Instrumental", "category": "music", "gradient": "from-indigo-400/30 via-violet-600/20 to-purple-900/30" },
+    { "kind": "video", "title": "K-Pop Choreography Clip", "model": "Grok Imagine 1.5", "category": "video", "gradient": "from-pink-400/30 via-fuchsia-500/20 to-violet-700/30" }
+  ]
+}
