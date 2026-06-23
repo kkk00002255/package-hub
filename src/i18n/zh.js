@@ -79,6 +79,7 @@ export default {
   'footer.status': '服务状态',
   'footer.copy': '© {year} Package. 保留所有权利。',
   'footer.signature': '用心打造 · 100+ 模型，一个订阅',
+  'footer.try': '立即试用',
 
   // models
   'models.eyebrow': '模型库',
@@ -144,6 +145,7 @@ export default {
 
   // common
   'common.flagship': '★',
+  'common.send': '发送',
   'common.lang.en': 'EN',
   'common.lang.zh': '中'
 }

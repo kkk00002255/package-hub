@@ -1,11 +1,14 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
 import { MessageSquare, Image as ImageIcon, Film, Mic } from '@lucide/vue'
 
+const { t } = useI18n()
+
 const items = [
-  { icon: MessageSquare, title: 'Intelligent conversation', desc: 'Talk to every flagship LLM side by side. Compare answers, switch mid-thread, route by task.', color: 'cyan' },
-  { icon: ImageIcon, title: 'Image creation', desc: 'Generate, edit and remix with the world’s top diffusion models. Brand-safe, photoreal, painterly — at will.', color: 'violet' },
-  { icon: Film, title: 'Video generation', desc: 'Text to cinematic, image to motion, frame-locked transitions, sound-synced — all under one roof.', color: 'pink' },
-  { icon: Mic, title: 'Speech synthesis', desc: 'Lifelike TTS in 30+ languages with voice cloning, emotion control and instant iteration.', color: 'emerald' }
+  { icon: MessageSquare, key: 'core.chat',  color: 'cyan' },
+  { icon: ImageIcon,     key: 'core.image', color: 'violet' },
+  { icon: Film,           key: 'core.video', color: 'pink' },
+  { icon: Mic,            key: 'core.voice', color: 'emerald' }
 ]
 
 const colorMap = {
@@ -20,25 +23,25 @@ const colorMap = {
   <section class="relative py-20 sm:py-24">
     <div class="container-x">
       <div class="text-center mb-14">
-        <div class="section-title-eyebrow mx-auto">Core Capabilities</div>
+        <div class="section-title-eyebrow mx-auto">{{ t('core.eyebrow') }}</div>
         <h2 class="mt-4 text-3xl sm:text-5xl font-bold tracking-tight text-balance">
-          Four core capabilities.
-          <span class="block grad-text">One platform.</span>
+          {{ t('core.title1') }}
+          <span class="block grad-text">{{ t('core.title2') }}</span>
         </h2>
       </div>
 
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <article
           v-for="it in items"
-          :key="it.title"
+          :key="it.key"
           class="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-white/20 hover:bg-white/[0.05] transition-all"
         >
           <div class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 border border-white/10 transition-all"
                :class="colorMap[it.color]">
             <component :is="it.icon" class="h-5 w-5" />
           </div>
-          <h3 class="mt-5 text-lg font-semibold text-white capitalize">{{ it.title }}</h3>
-          <p class="mt-2 text-sm text-ink-400 leading-relaxed">{{ it.desc }}</p>
+          <h3 class="mt-5 text-lg font-semibold text-white">{{ t(it.key + '.title') }}</h3>
+          <p class="mt-2 text-sm text-ink-400 leading-relaxed">{{ t(it.key + '.desc') }}</p>
         </article>
       </div>
     </div>

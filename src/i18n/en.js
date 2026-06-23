@@ -79,6 +79,7 @@ export default {
   'footer.status': 'Status',
   'footer.copy': '© {year} Package. All rights reserved.',
   'footer.signature': 'Made with care · 100+ models, one subscription',
+  'footer.try': 'Try it',
 
   // models
   'models.eyebrow': 'Model Library',
@@ -144,6 +145,7 @@ export default {
 
   // common
   'common.flagship': '★',
+  'common.send': 'Send',
   'common.lang.en': 'EN',
   'common.lang.zh': '中'
 }

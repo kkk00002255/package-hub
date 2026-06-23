@@ -1,8 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import models from '../data/models.json'
 import ModelCard from '../components/ModelCard.vue'
 import { Search, Filter } from '@lucide/vue'
+
+const { t } = useI18n()
 
 const search = ref('')
 const activeCat = ref('all')
@@ -23,12 +26,12 @@ const countByCat = (id) => id === 'all' ? models.models.length : models.models.f
   <section class="relative py-16 sm:py-20">
     <div class="container-x">
       <div class="mx-auto max-w-3xl text-center">
-        <div class="section-title-eyebrow mx-auto">Model Library</div>
+        <div class="section-title-eyebrow mx-auto">{{ t('models.eyebrow') }}</div>
         <h1 class="mt-4 text-4xl sm:text-6xl font-bold tracking-tight text-balance">
-          Every model, <span class="grad-text">one click away.</span>
+          {{ t('models.title1') }} <span class="grad-text">{{ t('models.title2') }}</span>
         </h1>
         <p class="mt-5 text-ink-400 text-base sm:text-lg">
-          {{ models.models.length }} flagship models across chat, image, video, music, voice and agents. Pick one, ship.
+          {{ t('models.desc', { n: models.models.length }) }}
         </p>
       </div>
 
@@ -38,7 +41,7 @@ const countByCat = (id) => id === 'all' ? models.models.length : models.models.f
           <input
             v-model="search"
             type="search"
-            placeholder="Search models, vendors, capabilities…"
+            :placeholder="t('models.search.placeholder')"
             class="w-full rounded-full bg-white/5 border border-white/10 pl-11 pr-4 py-3 text-sm placeholder-ink-500 focus:outline-none focus:border-brand-500/50 focus:bg-white/[0.07]"
           />
         </div>
@@ -50,7 +53,7 @@ const countByCat = (id) => id === 'all' ? models.models.length : models.models.f
                        ? 'bg-white text-ink-950 border-white'
                        : 'border-white/10 bg-white/5 text-ink-300 hover:bg-white/10']"
           >
-            All <span class="text-ink-500">· {{ countByCat('all') }}</span>
+            {{ t('models.filter.all') }} <span class="text-ink-500">· {{ countByCat('all') }}</span>
           </button>
           <button
             v-for="c in models.categories"
@@ -71,7 +74,7 @@ const countByCat = (id) => id === 'all' ? models.models.length : models.models.f
       </div>
 
       <div v-if="!filtered.length" class="mt-16 text-center text-ink-500">
-        No models match your search.
+        {{ t('models.empty') }}
       </div>
     </div>
   </section>

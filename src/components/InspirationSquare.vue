@@ -1,8 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import inspiration from '../data/inspiration.json'
 import { Play, Image as ImageIcon, Music, ArrowDown } from '@lucide/vue'
 
+const { t } = useI18n()
 const tiles = computed(() => inspiration.tiles)
 </script>
 
@@ -10,12 +12,12 @@ const tiles = computed(() => inspiration.tiles)
   <section id="inspiration" class="relative py-20 sm:py-28">
     <div class="container-x">
       <div class="text-center mb-12">
-        <div class="section-title-eyebrow mx-auto">Inspiration Square</div>
+        <div class="section-title-eyebrow mx-auto">{{ t('insp.eyebrow') }}</div>
         <h2 class="mt-4 text-3xl sm:text-5xl font-bold tracking-tight">
-          <span class="grad-text">See what creators ship with Package.</span>
+          <span class="grad-text">{{ t('insp.title') }}</span>
         </h2>
         <p class="mt-4 text-ink-400 text-base sm:text-lg">
-          Every tile below is a real output from one of the 100+ models inside Package.
+          {{ t('insp.desc') }}
         </p>
       </div>
 
@@ -55,7 +57,7 @@ const tiles = computed(() => inspiration.tiles)
 
       <div class="mt-12 text-center">
         <router-link to="/models" class="btn btn-ghost text-sm">
-          Load more inspiration
+          {{ t('insp.more') }}
           <ArrowDown class="h-4 w-4" />
         </router-link>
       </div>
