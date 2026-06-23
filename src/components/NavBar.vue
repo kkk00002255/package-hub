@@ -12,7 +12,7 @@ const scrolled = ref(false)
 const links = [
   { to: '/models',           labelKey: 'nav.models' },
   { to: '/pricing',          labelKey: 'nav.pricing' },
-  { to: '/#agents',          labelKey: 'nav.agents' },
+  { to: '/agents',           labelKey: 'nav.agents' },
   { to: '/#inspiration',     labelKey: 'nav.inspiration' },
   { to: '/#faq',             labelKey: 'nav.faq' }
 ]
