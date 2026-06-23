@@ -34,10 +34,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: `Input too long. Max ${MAX_INPUT_CHARS} chars.` });
   }
 
-  const apiKey = process.env.DEEPSEEK_API_KEY_PACKAGE;
+  const apiKey = process.env.DEEPSEEK_API_KEY_PACKAGE || null;  // legacy shared key, optional
   if (!apiKey) {
-    console.error('DEEPSEEK_API_KEY_PACKAGE not set');
-    return res.status(500).json({ error: 'Server not configured' });
+    console.warn('DEEPSEEK_API_KEY_PACKAGE not set; relying on split keys');
   }
 
   // Whitelist: only the two real DeepSeek models may hit the upstream.
