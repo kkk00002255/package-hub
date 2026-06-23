@@ -19,7 +19,7 @@ const router = createRouter({
   ],
   scrollBehavior(to, from, saved) {
     if (saved) return saved
-    return { top: 0, behavior: 'smooth' }
+    return { top: 0 }
   }
 })
 
