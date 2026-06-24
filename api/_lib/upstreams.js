@@ -53,6 +53,31 @@ export const UPSTREAMS = {
     latencyMs: 150,
     getKey: () => process.env.MOONSHOT_API_KEY,
   },
+  // 新增 3 家便宜上游（2026-06-24 补充）
+  hunyuan: {
+    name: 'Hunyuan',
+    baseUrl: 'https://api.hunyuan.cloud.tencent.com/v1',
+    region: 'CN',
+    costLevel: 1,
+    latencyMs: 120,
+    getKey: () => process.env.HUNYUAN_API_KEY,
+  },
+  baichuan: {
+    name: 'Baichuan',
+    baseUrl: 'https://api.baichuan-ai.com/v1',
+    region: 'CN',
+    costLevel: 1,
+    latencyMs: 130,
+    getKey: () => process.env.BAICHUAN_API_KEY,
+  },
+  stepfun: {
+    name: 'StepFun',
+    baseUrl: 'https://api.stepfun.com/v1',
+    region: 'CN',
+    costLevel: 1,
+    latencyMs: 110,
+    getKey: () => process.env.STEPFUN_API_KEY,
+  },
 };
 
 export class UpstreamError extends Error {
