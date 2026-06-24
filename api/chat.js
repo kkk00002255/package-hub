@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       maxTokens,
       temperature: body.temperature ?? 0.7,
       country,
-      timeoutMs: TIMEOUT_MS,
+      timeoutMs: 25000,  // 每个上游 25s 超时，避免 Vercel Function 总耗时超限
     });
 
     // 如果主候还有更多备选可试，可以继续重试——但目前一个成功就返回

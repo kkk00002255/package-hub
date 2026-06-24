@@ -147,7 +147,6 @@ export const MODEL_ROUTING = {
       { upstream: 'stepfun', model: 'step-1-8k', costUSD: 0.2, priority: 1, note: '阶跃星辰 step-1-8k（首选）' },
       { upstream: 'siliconflow', model: 'stepfun-ai/Step-3.5-Flash', costUSD: 0.2, priority: 2, note: '硛基流动 Step 镜像' },
       { upstream: 'zhipu', model: 'glm-4-flash', costUSD: 0.1, priority: 3, note: '智谱 GLM 4 Flash 备选' },
-      { upstream: 'hunyuan', model: 'hunyuan-turbo', costUSD: 0.5, priority: 4, note: '腾讯混元' },
       { upstream: 'baichuan', model: 'Baichuan4-Turbo', costUSD: 0.6, priority: 5, note: '百川 4 Turbo' },
       { upstream: 'openrouter', model: 'liquid/lfm-2.5-1.2b-instruct:free', costUSD: 0, priority: 6, note: 'OR 免费 fallback' },
     ],
@@ -157,7 +156,6 @@ export const MODEL_ROUTING = {
   'mimo-v2.5-pro': {
     candidates: [
       { upstream: 'siliconflow', model: 'inclusionAI/Ling-flash-2.0', costUSD: 0.3, priority: 1, note: '小米 mimo 同级别替代' },
-      { upstream: 'hunyuan', model: 'hunyuan-turbo', costUSD: 0.5, priority: 2, note: '腾讯混元' },
       { upstream: 'stepfun', model: 'step-1-8k', costUSD: 0.2, priority: 3, note: '阶跃星辰' },
       { upstream: 'baichuan', model: 'Baichuan4-Turbo', costUSD: 0.6, priority: 4, note: '百川 4 Turbo' },
       { upstream: 'siliconflow', model: 'MiniMaxAI/MiniMax-M2.5', costUSD: 0.4, priority: 5, note: 'MiniMax 同级别' },
@@ -169,7 +167,6 @@ export const MODEL_ROUTING = {
     candidates: [
       { upstream: 'siliconflow', model: 'MiniMaxAI/MiniMax-M2.5', costUSD: 0.4, priority: 1, note: 'MiniMax 系列' },
       { upstream: 'zhipu', model: 'glm-5.2', costUSD: 0.5, priority: 2, note: '智谱 GLM 5.2 备选' },
-      { upstream: 'hunyuan', model: 'hunyuan-turbo', costUSD: 0.5, priority: 3, note: '腾讯混元' },
       { upstream: 'stepfun', model: 'step-1-8k', costUSD: 0.5, priority: 4, note: '阶跃星辰' },
       { upstream: 'baichuan', model: 'Baichuan4-Turbo', costUSD: 0.6, priority: 5, note: '百川 4 Turbo' },
       { upstream: 'volcengine', model: '__MINIMAX_M2_5_ENDPOINT__', costUSD: 0.4, priority: 6, note: '字节火山镜像，待 endpoint' },
