@@ -221,11 +221,10 @@ export const MODEL_ROUTING = {
   },
   'wanxiang-2.7': {
     candidates: [
-      { upstream: 'volcengine', model: '__WANXIANG_IMAGE_ENDPOINT__', costUSD: 0.3, priority: 1, note: '字节火山豆包 Seedream 替代' },
-      { upstream: 'siliconflow', model: 'Tongyi-MAI/Z-Image-Turbo', costUSD: 0, priority: 2 },
+      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL 文本 fallback（图像生成需 /api/image）' },
     ],
-    status: 'live',
-    note: '字节火山 Seedream 系列替代通义万相',
+    status: 'demo',
+    note: '图像生成需专属 /api/image endpoint',
   },
   'qwen-image': {
     candidates: [
@@ -264,16 +263,17 @@ export const MODEL_ROUTING = {
   'pix-c1-fl': { candidates: [], status: 'coming-soon' },
   'wanxiang-vid': {
     candidates: [
-      { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-T2V-A14B', costUSD: 2, priority: 1, note: '开源视频生成' },
-      { upstream: 'volcengine', model: '__DOUBAO_SEEDANCE_ENDPOINT__', costUSD: 1.5, priority: 2, note: '字节火山 Seedance，待 endpoint' },
+      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL 文本 fallback（视频生成需 /api/video）' },
     ],
-    status: 'live',
+    status: 'demo',
+    note: '视频生成需专属 /api/video endpoint',
   },
   'wanxiang-vid-ext': {
     candidates: [
-      { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-I2V-A14B', costUSD: 2, priority: 1 },
+      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL fallback' },
     ],
-    status: 'live',
+    status: 'demo',
+    note: '视频生成需专属 /api/video endpoint',
   },
   'happyhorse-ref': { candidates: [], status: 'coming-soon' },
   'happyhorse-t2v': { candidates: [], status: 'coming-soon' },
