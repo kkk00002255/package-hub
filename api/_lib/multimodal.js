@@ -91,19 +91,24 @@ export async function generateVideo(model, prompt, opts = {}) {
 
   try {
     // Step 1: 提交任务
+    const submitBody = {
+      model,
+      prompt,
+      image_size: opts.size || '1280x720',
+      num_frames: opts.frames || 240,    // 默认 240 frames
+      fps: opts.fps || 12,                // 默认 12 fps → 20 秒
+    };
+    // I2V（图生视频）需要 image 字段
+    if (opts.image) {
+      submitBody.image = opts.image; // URL 或 base64
+    }
     const submitR = await fetch(`${ENDPOINTS.siliconflow.baseUrl}/video/submit`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${sfKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model,
-        prompt,
-        image_size: opts.size || '1280x720',
-        num_frames: opts.frames || 16,
-        fps: opts.fps || 16,
-      }),
+      body: JSON.stringify(submitBody),
       signal: controller.signal,
     });
 
