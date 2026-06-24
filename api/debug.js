@@ -7,26 +7,36 @@ export default async function handler(req, res) {
   
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // 只返回 boolean（不暴露 key 内容）— 安全
   const env = {
-    ZHIPU_API_KEY: !!process.env.ZHIPU_API_KEY,
-    MOONSHOT_API_KEY: !!process.env.MOONSHOT_API_KEY,
-    OPENROUTER_API_KEY: !!process.env.OPENROUTER_API_KEY,
-    SILICONFLOW_API_KEY: !!process.env.SILICONFLOW_API_KEY,
-    VOLCENGINE_API_KEY: !!process.env.VOLCENGINE_API_KEY,
+    ZHIPU_API_KEY: !!proces…KEY,
+    MOONSHOT_API_KEY: !!proces…KEY,
+    OPENROUTER_API_KEY: !!proces…KEY,
+    SILICONFLOW_API_KEY: !!proces…KEY,
+    VOLCENGINE_API_KEY: !!proces…KEY,
+    HUNYUAN_API_KEY: !!proces…KEY,
+    BAICHUAN_API_KEY: !!proces…KEY,
+    STEPFUN_API_KEY: !!proces…KEY,
   };
   
   const lengths = {
-    ZHIPU_API_KEY: process.env.ZHIPU_API_KEY?.length || 0,
-    MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY?.length || 0,
-    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY?.length || 0,
-    SILICONFLOW_API_KEY: process.env.SILICONFLOW_API_KEY?.length || 0,
-    VOLCENGINE_API_KEY: process.env.VOLCENGINE_API_KEY?.length || 0,
+    ZHIPU_API_KEY: proces…ngth || 0,
+    MOONSHOT_API_KEY: proces…ngth || 0,
+    OPENROUTER_API_KEY: proces…ngth || 0,
+    SILICONFLOW_API_KEY: proces…ngth || 0,
+    VOLCENGINE_API_KEY: proces…ngth || 0,
+    HUNYUAN_API_KEY: proces…ngth || 0,
+    BAICHUAN_API_KEY: proces…ngth || 0,
+    STEPFUN_API_KEY: proces…ngth || 0,
   };
+  
+  const activeCount = Object.values(env).filter(v => v).length;
   
   return res.status(200).json({
     nodeEnv: process.env.NODE_ENV,
     vercelEnv: process.env.VERCEL_ENV,
+    totalUpstreams: 8,
+    activeUpstreams: activeCount,
+    allConfigured: activeCount === 8,
     envSet: env,
     envLengths: lengths,
     timestamp: new Date().toISOString(),
