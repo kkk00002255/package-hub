@@ -84,6 +84,10 @@ export default async function handler(req, res) {
       error: e.message,
       requestedModel,
       country,
+      // DEBUG: 返回详细错误方便诊断
+      debugErrors: e.message.includes('All upstreams failed') 
+        ? e.message 
+        : undefined,
     });
   }
 }
