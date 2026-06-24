@@ -221,10 +221,11 @@ export const MODEL_ROUTING = {
   },
   'wanxiang-2.7': {
     candidates: [
-      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL 文本 fallback（图像生成需 /api/image）' },
+      { upstream: 'siliconflow', model: 'Tongyi-MAI/Z-Image', costUSD: 0.3, priority: 1, note: '通义万相（接 /api/image）' },
+      { upstream: 'siliconflow', model: 'Kwai-Kolors/Kolors', costUSD: 0.2, priority: 2, note: '快手 Kolors 备选' },
     ],
-    status: 'demo',
-    note: '图像生成需专属 /api/image endpoint',
+    status: 'live',
+    note: '图像生成已接 /api/image',
   },
   'qwen-image': {
     candidates: [
@@ -263,17 +264,17 @@ export const MODEL_ROUTING = {
   'pix-c1-fl': { candidates: [], status: 'coming-soon' },
   'wanxiang-vid': {
     candidates: [
-      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL 文本 fallback（视频生成需 /api/video）' },
+      { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-T2V-A14B', costUSD: 2, priority: 1, note: '通义万相 Wan 2.2 T2V（接 /api/video）' },
     ],
-    status: 'demo',
-    note: '视频生成需专属 /api/video endpoint',
+    status: 'live',
+    note: '视频生成已接 /api/video',
   },
   'wanxiang-vid-ext': {
     candidates: [
-      { upstream: 'zhipu', model: 'glm-4.5V', costUSD: 0.5, priority: 1, note: '智谱 VL fallback' },
+      { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-I2V-A14B', costUSD: 2, priority: 1, note: '通义万相 Wan 2.2 I2V（图生视频）' },
     ],
-    status: 'demo',
-    note: '视频生成需专属 /api/video endpoint',
+    status: 'live',
+    note: '视频生成已接 /api/video（图生视频）',
   },
   'happyhorse-ref': { candidates: [], status: 'coming-soon' },
   'happyhorse-t2v': { candidates: [], status: 'coming-soon' },

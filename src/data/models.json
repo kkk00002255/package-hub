@@ -84,7 +84,7 @@
       "tagline": "Fast, cheap, surprisingly capable.",
       "upstream": "gpt-5.4-mini",
       "status": "live",
-      "note": "OpenAI 地区限制；用 Qwen3.5-35B 同级别替代"
+      "note": "OpenAI 账户地区限制无法接入；用 Qwen3.5-35B 替代（性价比更高）"
     },
     {
       "id": "gpt-5.4-nano",
@@ -95,7 +95,7 @@
       "tagline": "Ultra-low latency for bulk workloads.",
       "upstream": "gpt-5.4-nano",
       "status": "live",
-      "note": "OpenAI 地区限制；用 Qwen3.5-9B 更小更快"
+      "note": "OpenAI 账户地区限制无法接入；用 Qwen3.5-9B 替代"
     },
     {
       "id": "opus-4-7",
@@ -126,7 +126,7 @@
       "tagline": "The workhorse for everyday intelligence.",
       "upstream": "sonnet-4-5",
       "status": "live",
-      "note": "海外走 OpenRouter Claude；国内 fallback 到 Qwen3.5-122B"
+      "note": "海外账户走 OpenRouter；国内账户 fallback 到 Qwen3.5-122B"
     },
     {
       "id": "gemini-3-pro",
@@ -157,7 +157,7 @@
       "tagline": "Open-weight champion, top reasoning per dollar.",
       "upstream": "deepseek-v4-pro",
       "status": "live",
-      "note": "DeepSeek 官方封号；硅基流动 Pro 镜像顶上"
+      "note": "DeepSeek 官方账户被封；多源 failover"
     },
     {
       "id": "deepseek-v4-flash",
@@ -209,7 +209,7 @@
       "tagline": "Strong agent and tool use.",
       "upstream": "glm-5.2",
       "status": "live",
-      "note": "智谱官方 + 硅基流动镜像 + 字节火山三源"
+      "note": "多源 failover，价格差不多"
     },
     {
       "id": "step-3.7-flash",
@@ -240,7 +240,7 @@
       "tagline": "Balanced general intelligence.",
       "upstream": "minimax-m3",
       "status": "live",
-      "note": "默认模型；硅基流动 MiniMax M2.5"
+      "note": "默认模型，多源 failover"
     },
     {
       "id": "minimax-m2.7",
@@ -281,7 +281,7 @@
       "tagline": "Photoreal + studio aesthetics.",
       "upstream": "banana-2",
       "status": "live",
-      "note": "Banana 真模型待接入；先上 Tongyi Z-Image 开源版"
+      "note": "开源替代；真 banana 2 待字节火山 endpoint"
     },
     {
       "id": "banana-pro",
@@ -332,7 +332,7 @@
       "tagline": "Asian aesthetics done right.",
       "upstream": "wanxiang-2.7",
       "status": "live",
-      "note": "字节火山 Seedream 替代；硅基流动开源版"
+      "note": "图像生成已接 /api/image"
     },
     {
       "id": "qwen-image",
@@ -383,7 +383,8 @@
       "tier": "flagship",
       "tagline": "Realistic motion, character consistency.",
       "upstream": "kling-2.6",
-      "status": "coming-soon"
+      "status": "coming-soon",
+      "note": "快手 Kling，国内可走但未在已配置上游中"
     },
     {
       "id": "vidu-q3-turbo",
@@ -434,7 +435,7 @@
       "tagline": "Versatile video, top quality/cost.",
       "upstream": "wanxiang-vid",
       "status": "live",
-      "note": "硅基流动 Wan 2.2 T2V 顶上"
+      "note": "视频生成已接 /api/video"
     },
     {
       "id": "wanxiang-vid-ext",
@@ -444,7 +445,8 @@
       "tier": "pro",
       "tagline": "Continue any clip seamlessly.",
       "upstream": "wanxiang-vid-ext",
-      "status": "live"
+      "status": "live",
+      "note": "视频生成已接 /api/video（图生视频）"
     },
     {
       "id": "happyhorse-ref",
@@ -555,7 +557,7 @@
       "tagline": "Full songs from a single prompt.",
       "upstream": "suno-4.5",
       "status": "demo",
-      "note": "音乐生成暂未接入；先用 MOSS TTS 演示"
+      "note": "音乐生成尚未接入；先用 TTS 演示"
     },
     {
       "id": "suno-4.5-instrumental",
@@ -576,7 +578,7 @@
       "tagline": "Ultra-natural Mandarin TTS.",
       "upstream": "doubao-tts-2",
       "status": "live",
-      "note": "字节火山豆包 TTS 待 endpoint；硅基流动 CosyVoice 顶上"
+      "note": "字节火山豆包 TTS 待 endpoint，硅基流动开源 TTS 顶上"
     },
     {
       "id": "gemini-3.1-tts",
@@ -597,7 +599,7 @@
       "tagline": "Script → storyboard → fully dubbed comic video.",
       "upstream": "comic-agent",
       "status": "demo",
-      "note": "Agent 是上层编排（chain LLM calls），模型用 Qwen Max"
+      "note": "Agent 是上层编排（chain LLM calls），模型用 Qwen Max；UI 待补"
     },
     {
       "id": "ecom-agent",

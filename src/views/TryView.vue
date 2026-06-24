@@ -43,6 +43,8 @@ async function send() {
   input.value = ''
   sending.value = true
 
+  const cat = selected.value.category
+
   // Coming soon or overseas: friendly message, no real call
   if (isComingSoon.value || isOverseas.value) {
     setTimeout(() => {
@@ -57,36 +59,22 @@ async function send() {
     return
   }
 
-  // Demo: use default model (M3) to give the user something to try
-  if (isDemo.value) {
-    const history = messages.value
-      .filter(m => m.role === 'user' || m.role === 'assistant')
-      .map(m => ({ role: m.role, content: m.text }))
-    try {
-      const r = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history, model: 'minimax-m3' })
-      })
-      const data = await r.json()
-      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
-      messages.value.push({
-        role: 'assistant',
-        text: (data.result || t('try.empty')) + (data.upstream ? `  [via ${data.upstream}]` : '')
-      })
-    } catch (e) {
-      messages.value.push({
-        role: 'assistant',
-        text: `⚠️ ${e.message || t('try.error')}`,
-        error: true
-      })
-    } finally {
-      sending.value = false
-    }
-    return
+  // Multimodal: image / video / voice / music
+  if (cat === 'image') {
+    return await sendImage(text)
+  }
+  if (cat === 'video') {
+    return await sendVideo(text)
+  }
+  if (cat === 'voice' || cat === 'music') {
+    return await sendAudio(text)
   }
 
-  // Live: real call to /api/chat
+  // Chat or Agent → /api/chat
+  return await sendChat()
+}
+
+async function sendChat() {
   const history = messages.value
     .filter(m => m.role === 'user' || m.role === 'assistant')
     .map(m => ({ role: m.role, content: m.text }))
@@ -108,9 +96,10 @@ async function send() {
       throw new Error(data.error || `HTTP ${r.status}`)
     }
 
+    const out = data.result || data.reasoning_content || t('try.empty')
     messages.value.push({
       role: 'assistant',
-      text: (data.result || t('try.empty')) + (data.upstream ? `  [via ${data.upstream}]` : '')
+      text: out + (data.upstream ? `  [via ${data.upstream}]` : '')
     })
   } catch (e) {
     messages.value.push({
@@ -122,6 +111,126 @@ async function send() {
     sending.value = false
   }
 }
+
+async function sendImage(prompt) {
+  try {
+    const r = await fetch('/api/image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        model: selected.value.upstream,
+        size: '1024x1024',
+        n: 1
+      })
+    })
+    let data
+    try { data = await r.json() } catch { throw new Error('Invalid response from server') }
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
+
+    if (data.images && data.images.length > 0) {
+      // 在聊天里插入图片
+      const url = data.images[0].url || data.images[0]
+      messages.value.push({
+        role: 'assistant',
+        text: `Generated image [${data.model}]:`,
+        image: url
+      })
+    } else {
+      messages.value.push({
+        role: 'assistant',
+        text: t('try.empty')
+      })
+    }
+  } catch (e) {
+    messages.value.push({
+      role: 'assistant',
+      text: `⚠️ ${e.message || t('try.error')}`,
+      error: true
+    })
+  } finally {
+    sending.value = false
+  }
+}
+
+async function sendVideo(prompt) {
+  try {
+    messages.value.push({
+      role: 'assistant',
+      text: '🎬 Generating video (this may take 30-120 seconds)...',
+      muted: true
+    })
+    const r = await fetch('/api/video', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        model: selected.value.upstream
+      })
+    })
+    let data
+    try { data = await r.json() } catch { throw new Error('Invalid response from server') }
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
+
+    if (data.videos && data.videos.length > 0) {
+      const url = data.videos[0].url || data.videos[0]
+      messages.value.push({
+        role: 'assistant',
+        text: `Generated video [${data.model}]:`,
+        video: url
+      })
+    } else {
+      messages.value.push({
+        role: 'assistant',
+        text: t('try.empty')
+      })
+    }
+  } catch (e) {
+    messages.value.push({
+      role: 'assistant',
+      text: `⚠️ ${e.message || t('try.error')}`,
+      error: true
+    })
+  } finally {
+    sending.value = false
+  }
+}
+
+async function sendAudio(text) {
+  try {
+    const r = await fetch('/api/audio', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        model: selected.value.upstream
+      })
+    })
+    let data
+    try { data = await r.json() } catch { throw new Error('Invalid response from server') }
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
+
+    if (data.audio) {
+      messages.value.push({
+        role: 'assistant',
+        text: `Generated audio [${data.model}]:`,
+        audio: data.audio
+      })
+    } else {
+      messages.value.push({
+        role: 'assistant',
+        text: t('try.empty')
+      })
+    }
+  } catch (e) {
+    messages.value.push({
+      role: 'assistant',
+      text: `⚠️ ${e.message || t('try.error')}`,
+      error: true
+    })
+  } finally {
+    sending.value = false
+  }
 </script>
 
 <template>
@@ -180,7 +289,12 @@ async function send() {
                     : m.error ? 'bg-red-500/10 border border-red-500/30 text-red-200'
                     : 'bg-white/5 border border-white/10 text-ink-100'
                 ]"
-              >{{ m.text }}</div>
+              >
+                <div>{{ m.text }}</div>
+                <img v-if="m.image" :src="m.image" alt="generated" class="mt-2 rounded-lg max-w-full" />
+                <video v-if="m.video" :src="m.video" controls class="mt-2 rounded-lg max-w-full" />
+                <audio v-if="m.audio" :src="m.audio" controls class="mt-2 w-full" />
+              </div>
               <div v-else class="mx-auto max-w-md text-center text-[11px] text-ink-500 italic">{{ m.key ? t(m.key) : m.text }}</div>
             </div>
             <div v-if="sending" class="flex justify-start">
