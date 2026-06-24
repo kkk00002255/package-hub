@@ -6,12 +6,19 @@ import { generateVideo } from './_lib/multimodal.js';
 
 const MAX_PROMPT_LEN = 2000;
 
+// 默认参数：20 秒视频，12 fps = 240 frames
+const DEFAULT_FRAMES = 240;
+const DEFAULT_FPS = 12;
+const MAX_FRAMES = 480; // 40 秒上限
+
 const MODEL_ROUTING = {
+  // I2V（图生视频）作为默认 — 主人主要用例是"把生成的图变成视频"
   'wanxiang-vid': [
-    { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-T2V-A14B', costUSD: 2, note: '通义万相 Wan 2.2 T2V' },
+    { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-I2V-A14B', costUSD: 4, note: '通义万相 Wan 2.2 I2V（图生视频，需输入图）' },
   ],
+  // 纯文生视频作为备选
   'wanxiang-vid-ext': [
-    { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-I2V-A14B', costUSD: 2, note: '通义万相 Wan 2.2 I2V（图生视频）' },
+    { upstream: 'siliconflow', model: 'Wan-AI/Wan2.2-T2V-A14B', costUSD: 4, note: '通义万相 Wan 2.2 T2V（文生视频，无图时可用）' },
   ],
 };
 
@@ -37,26 +44,38 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: `Model "${requestedModel}" is not available for video generation yet` });
   }
 
-  // Vercel Function 默认 10s，免费版 Hobby plan 最长 60s
-  // 视频生成可能需要更长时间，先设长一些
+  // I2V（图生视频）需要输入图
+  const inputImage = body.image || body.image_url;
+  if (!inputImage && candidates.some(c => c.model.includes('I2V'))) {
+    return res.status(400).json({ error: 'Image-to-video requires an input image. Please upload or generate an image first.' });
+  }
+
   res.setHeader('Cache-Control', 'no-cache');
+
+  // 参数：默认 20 秒视频（240 frames × 12 fps）
+  const frames = Math.min(MAX_FRAMES, Math.max(16, Number(body.frames) || DEFAULT_FRAMES));
+  const fps = Math.min(24, Math.max(8, Number(body.fps) || DEFAULT_FPS));
+  const seconds = Math.round((frames / fps) * 10) / 10;
 
   const errors = [];
   for (const candidate of candidates) {
     try {
       const result = await generateVideo(candidate.model, prompt, {
+        image: inputImage, // I2V 需要输入图（URL 或 base64）
         size: body.size || '1280x720',
-        frames: body.frames || 16,
-        fps: body.fps || 16,
-        // 如果硅基流动视频生成是同步接口，会立即返回；异步接口会轮询
-        pollIntervalMs: 8000,
-        maxPollAttempts: 30, // 240s 上限
+        frames,
+        fps,
+        // 视频生成慢：20s 视频约 90-180s，轮询间隔 10s + 30 次 = 300s 上限
+        pollIntervalMs: 10000,
+        maxPollAttempts: 30,
       });
       return res.status(200).json({
         ...result,
         requestedModel,
         candidateUpstream: candidate.upstream,
         candidateModel: candidate.model,
+        seconds,
+        frames,
       });
     } catch (e) {
       errors.push({ candidate, error: e.message });
