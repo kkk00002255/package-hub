@@ -157,15 +157,28 @@ async function sendVideo(prompt) {
   try {
     messages.value.push({
       role: 'assistant',
-      text: '🎬 Generating video (this may take 30-120 seconds)...',
+      text: '🎬 Generating 20-second video (this may take 90-180 seconds)...',
       muted: true
     })
+
+    // 自动获取最近一张生成的图片作为 I2V 输入
+    let inputImage = null;
+    for (let i = messages.value.length - 1; i >= 0; i--) {
+      if (messages.value[i].image) {
+        inputImage = messages.value[i].image;
+        break;
+      }
+    }
+
     const r = await fetch('/api/video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         prompt,
-        model: selected.value.upstream
+        model: selected.value.upstream,
+        image: inputImage, // I2V 需要输入图（从最近生成的图片自动获取）
+        frames: 240,       // 20 秒视频
+        fps: 12,
       })
     })
     let data
