@@ -49,8 +49,8 @@ export default async function handler(req, res) {
         frames: body.frames || 16,
         fps: body.fps || 16,
         // 如果硅基流动视频生成是同步接口，会立即返回；异步接口会轮询
-        pollIntervalMs: 5000,
-        maxPollAttempts: 12, // 60s 上限
+        pollIntervalMs: 8000,
+        maxPollAttempts: 30, // 240s 上限
       });
       return res.status(200).json({
         ...result,

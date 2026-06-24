@@ -135,31 +135,47 @@ async function pollVideoStatus(requestId, apiKey, intervalMs, maxAttempts) {
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise(resolve => setTimeout(resolve, intervalMs));
 
-    const r = await fetch(`${ENDPOINTS.siliconflow.baseUrl}/video/status?requestId=${encodeURIComponent(requestId)}`, {
-      headers: { 'Authorization': `Bearer ${apiKey}` },
+    // 硛基流动视频 status 端点是 **POST**（不是 GET）
+    const r = await fetch(`${ENDPOINTS.siliconflow.baseUrl}/video/status`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ requestId }),
     });
 
     if (!r.ok) {
-      continue; // 轮询失败重试
+      // 任务可能还没创建或已过期，重试
+      continue;
     }
 
     const data = await r.json();
     const status = (data.status || '').toLowerCase();
 
     if (status === 'succeed' || status === 'success' || status === 'completed' || status === 'done') {
+      const videos = data.results?.videos || data.videos || [];
+      let videoList;
+      if (videos.length > 0) {
+        videoList = videos.map(v => (typeof v === 'string' ? v : v.url || v.video_url));
+      } else if (data.video_url || data.url) {
+        videoList = [{ url: data.video_url || data.url }];
+      } else {
+        throw new Error('Video succeeded but no URL in response: ' + JSON.stringify(data));
+      }
       return {
-        videos: data.results?.videos || data.videos || [{ url: data.video_url || data.url }],
+        videos: videoList,
         upstream: 'siliconflow',
-        model: data.model,
+        model: data.model || 'Wan-AI/Wan2.2-T2V-A14B',
         requestId,
       };
     }
     if (status === 'failed' || status === 'fail' || status === 'error') {
-      throw new Error(`Video generation failed: ${data.error || JSON.stringify(data)}`);
+      throw new Error(`Video generation failed: ${data.reason || data.error || JSON.stringify(data)}`);
     }
-    // 其他状态（pending, processing, running）继续轮询
+    // 其他状态（pending / inprogress / running / processing）继续轮询
   }
-  throw new Error(`Video polling timeout after ${maxAttempts} attempts`);
+  throw new Error(`Video polling timeout after ${maxAttempts} attempts (${maxAttempts * intervalMs / 1000}s)`);
 }
 
 // ============ Audio (TTS) ============
