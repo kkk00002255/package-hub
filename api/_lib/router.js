@@ -161,12 +161,15 @@ export const MODEL_ROUTING = {
   'minimax-m3': {
     candidates: [
       { upstream: 'siliconflow', model: 'MiniMaxAI/MiniMax-M2.5', costUSD: 0.4, priority: 1, note: 'MiniMax 系列' },
-      { upstream: 'volcengine', model: '__MINIMAX_M2_5_ENDPOINT__', costUSD: 0.4, priority: 2, note: '字节火山镜像，待 endpoint' },
-      { upstream: 'zhipu', model: 'glm-5.2', costUSD: 0.5, priority: 3, note: '智谱 GLM 5.2 备选' },
-      { upstream: 'openrouter', model: 'openai/gpt-oss-120b:free', costUSD: 0, priority: 4, note: 'OR 免费 fallback' },
+      { upstream: 'zhipu', model: 'glm-5.2', costUSD: 0.5, priority: 2, note: '智谱 GLM 5.2 备选' },
+      { upstream: 'hunyuan', model: 'hunyuan-turbo', costUSD: 0.5, priority: 3, note: '腾讯混元' },
+      { upstream: 'stepfun', model: 'step-1-8k', costUSD: 0.5, priority: 4, note: '阶跃星辰' },
+      { upstream: 'baichuan', model: 'Baichuan4-Turbo', costUSD: 0.6, priority: 5, note: '百川 4 Turbo' },
+      { upstream: 'volcengine', model: '__MINIMAX_M2_5_ENDPOINT__', costUSD: 0.4, priority: 6, note: '字节火山镜像，待 endpoint' },
+      { upstream: 'openrouter', model: 'openai/gpt-oss-120b:free', costUSD: 0, priority: 7, note: 'OR 免费 fallback' },
     ],
     status: 'live',
-    note: '默认模型，多源 failover',
+    note: '默认模型，多源 failover（8 个上游）',
   },
   'minimax-m2.7': {
     candidates: [
@@ -385,7 +388,7 @@ export function selectUpstream(modelId, opts = {}) {
 }
 
 function isChinaUpstream(name) {
-  return ['siliconflow', 'zhipu', 'volcengine', 'moonshot'].includes(name);
+  return ['siliconflow', 'zhipu', 'volcengine', 'moonshot', 'hunyuan', 'baichuan', 'stepfun'].includes(name);
 }
 
 /**
