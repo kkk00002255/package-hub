@@ -1,79 +1,633 @@
 {
   "categories": [
-    { "id": "chat", "label": "Chat", "icon": "MessageSquare", "color": "cyan", "desc": "Top-tier LLMs for any conversation, reasoning, or writing task." },
-    { "id": "image", "label": "Image", "icon": "Image", "color": "violet", "desc": "Generate, edit and remix images with the world's leading diffusion models." },
-    { "id": "video", "label": "Video", "icon": "Film", "color": "pink", "desc": "From text to cinematic video — storyboard, animate, and direct in one place." },
-    { "id": "music", "label": "Music", "icon": "Music", "color": "amber", "desc": "Studio-grade music and song generation at the speed of thought." },
-    { "id": "voice", "label": "Voice", "icon": "Mic", "color": "emerald", "desc": "Lifelike text-to-speech and voice cloning in 30+ languages." },
-    { "id": "agent", "label": "Agents", "icon": "Sparkles", "color": "rose", "desc": "Multi-step creative agents that take you from idea to finished work." }
+    {
+      "id": "chat",
+      "label": "Chat",
+      "icon": "MessageSquare",
+      "color": "cyan",
+      "desc": "Top-tier LLMs for any conversation, reasoning, or writing task."
+    },
+    {
+      "id": "image",
+      "label": "Image",
+      "icon": "Image",
+      "color": "violet",
+      "desc": "Generate, edit and remix images with the world's leading diffusion models."
+    },
+    {
+      "id": "video",
+      "label": "Video",
+      "icon": "Film",
+      "color": "pink",
+      "desc": "From text to cinematic video — storyboard, animate, and direct in one place."
+    },
+    {
+      "id": "music",
+      "label": "Music",
+      "icon": "Music",
+      "color": "amber",
+      "desc": "Studio-grade music and song generation at the speed of thought."
+    },
+    {
+      "id": "voice",
+      "label": "Voice",
+      "icon": "Mic",
+      "color": "emerald",
+      "desc": "Lifelike text-to-speech and voice cloning in 30+ languages."
+    },
+    {
+      "id": "agent",
+      "label": "Agents",
+      "icon": "Sparkles",
+      "color": "rose",
+      "desc": "Multi-step creative agents that take you from idea to finished work."
+    }
   ],
   "models": [
-    { "id": "gpt-5.5", "name": "GPT-5.5", "vendor": "OpenAI", "category": "chat", "tier": "flagship", "tagline": "Best-in-class reasoning, code and conversation." },
-    { "id": "gpt-5.5-deep", "name": "GPT-5.5 Deep Reasoning", "vendor": "OpenAI", "category": "chat", "tier": "pro", "tagline": "Maximum depth for hard problems." },
-    { "id": "gpt-5.5-high", "name": "GPT-5.5 High Reasoning", "vendor": "OpenAI", "category": "chat", "tier": "pro", "tagline": "Long, careful chains of thought." },
-    { "id": "gpt-5.4-mini", "name": "GPT-5.4 mini", "vendor": "OpenAI", "category": "chat", "tier": "fast", "tagline": "Fast, cheap, surprisingly capable." },
-    { "id": "gpt-5.4-nano", "name": "GPT-5.4 nano", "vendor": "OpenAI", "category": "chat", "tier": "lite", "tagline": "Ultra-low latency for bulk workloads." },
-
-    { "id": "opus-4-7", "name": "Claude Opus 4.7", "vendor": "Anthropic", "category": "chat", "tier": "flagship", "tagline": "Long context, nuanced writing, careful reasoning." },
-    { "id": "opus-4-8", "name": "Claude Opus 4.8", "vendor": "Anthropic", "category": "chat", "tier": "flagship", "tagline": "Our most thoughtful model yet." },
-    { "id": "sonnet-4-5", "name": "Claude Sonnet 4.5", "vendor": "Anthropic", "category": "chat", "tier": "pro", "tagline": "The workhorse for everyday intelligence." },
-
-    { "id": "gemini-3-pro", "name": "Gemini 3 Pro", "vendor": "Google", "category": "chat", "tier": "flagship", "tagline": "Multimodal reasoning at frontier scale." },
-    { "id": "gemini-3.5-flash", "name": "Gemini 3.5 Flash", "vendor": "Google", "category": "chat", "tier": "fast", "tagline": "Speed and quality in one package." },
-
-    { "id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "vendor": "DeepSeek", "category": "chat", "tier": "pro", "tagline": "Open-weight champion, top reasoning per dollar." },
-    { "id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash", "vendor": "DeepSeek", "category": "chat", "tier": "fast", "tagline": "Blazing fast, surprisingly strong." },
-
-    { "id": "qwen-3.7-max", "name": "Qwen 3.7 Max", "vendor": "Alibaba", "category": "chat", "tier": "flagship", "tagline": "Multilingual powerhouse, top Chinese reasoning." },
-    { "id": "qwen-3.7-plus", "name": "Qwen 3.7 Plus", "vendor": "Alibaba", "category": "chat", "tier": "pro", "tagline": "Balanced speed and depth." },
-    { "id": "qwen-3.6-plus", "name": "Qwen 3.6 Plus", "vendor": "Alibaba", "category": "chat", "tier": "pro", "tagline": "Trusted classic." },
-
-    { "id": "glm-5.2", "name": "GLM 5.2", "vendor": "Zhipu", "category": "chat", "tier": "pro", "tagline": "Strong agent and tool use." },
-    { "id": "step-3.7-flash", "name": "Step 3.7 Flash", "vendor": "StepFun", "category": "chat", "tier": "fast", "tagline": "Ultra-fast responses." },
-    { "id": "mimo-v2.5-pro", "name": "Mimo V2.5 Pro", "vendor": "Xiaomi", "category": "chat", "tier": "pro", "tagline": "Compact, capable, multilingual." },
-    { "id": "minimax-m3", "name": "MiniMax M3", "vendor": "MiniMax", "category": "chat", "tier": "pro", "tagline": "Balanced general intelligence." },
-    { "id": "minimax-m2.7", "name": "MiniMax M2.7", "vendor": "MiniMax", "category": "chat", "tier": "pro", "tagline": "Previous-gen workhorse." },
-    { "id": "grok-4.20", "name": "Grok 4.20", "vendor": "xAI", "category": "chat", "tier": "flagship", "tagline": "Real-time knowledge with attitude." },
-    { "id": "grok-4.3", "name": "Grok 4.3", "vendor": "xAI", "category": "chat", "tier": "pro", "tagline": "Fast, witty, web-connected." },
-
-    { "id": "banana-2", "name": "Banana 2 Official", "vendor": "Package Relay", "category": "image", "tier": "flagship", "tagline": "Photoreal + studio aesthetics." },
-    { "id": "banana-pro", "name": "Banana Pro Official", "vendor": "Package Relay", "category": "image", "tier": "flagship", "tagline": "Pro-grade commercial imagery." },
-    { "id": "gpt-image-2", "name": "GPT Image 2", "vendor": "OpenAI", "category": "image", "tier": "flagship", "tagline": "Native image generation in chat models." },
-    { "id": "gpt-image-2-pro", "name": "GPT Image 2 Pro", "vendor": "OpenAI", "category": "image", "tier": "pro", "tagline": "High-resolution, brand-safe." },
-    { "id": "vidu-image-2", "name": "Vidu Image 2", "vendor": "Vidu", "category": "image", "tier": "pro", "tagline": "Cinematic, painterly, character-consistent." },
-    { "id": "wanxiang-2.7", "name": "Wanxiang 2.7 Image", "vendor": "Alibaba", "category": "image", "tier": "pro", "tagline": "Asian aesthetics done right." },
-    { "id": "qwen-image", "name": "Qwen Image", "vendor": "Alibaba", "category": "image", "tier": "pro", "tagline": "Text in images, done well." },
-
-    { "id": "sora-2", "name": "Sora 2", "vendor": "OpenAI", "category": "video", "tier": "flagship", "tagline": "Cinematic text-to-video, native audio." },
-    { "id": "veo-3.1", "name": "Veo 3.1", "vendor": "Google", "category": "video", "tier": "flagship", "tagline": "4K cinematic with synced audio." },
-    { "id": "veo-3.1-lite", "name": "Veo 3.1 Lite", "vendor": "Google", "category": "video", "tier": "fast", "tagline": "Speed-optimised Veo." },
-    { "id": "kling-2.6", "name": "Kling 2.6 Pro", "vendor": "Kuaishou", "category": "video", "tier": "flagship", "tagline": "Realistic motion, character consistency." },
-    { "id": "vidu-q3-turbo", "name": "Vidu Q3 Turbo", "vendor": "Vidu", "category": "video", "tier": "pro", "tagline": "Reference-to-video in seconds." },
-    { "id": "vidu-q3-ref", "name": "Vidu Q3 Reference-to-Video", "vendor": "Vidu", "category": "video", "tier": "pro", "tagline": "Animate any reference image." },
-    { "id": "pix-c1-ref", "name": "Pix C1 Reference-to-Video", "vendor": "PixVerse", "category": "video", "tier": "pro", "tagline": "Cinematic animation from a single frame." },
-    { "id": "pix-c1-fl", "name": "Pix C1 First/Last Frames", "vendor": "PixVerse", "category": "video", "tier": "pro", "tagline": "Controlled transitions." },
-    { "id": "wanxiang-vid", "name": "Wanxiang 2.7 Video", "vendor": "Alibaba", "category": "video", "tier": "pro", "tagline": "Versatile video, top quality/cost." },
-    { "id": "wanxiang-vid-ext", "name": "Wanxiang 2.7 Video Extend", "vendor": "Alibaba", "category": "video", "tier": "pro", "tagline": "Continue any clip seamlessly." },
-    { "id": "happyhorse-ref", "name": "HappyHorse Reference", "vendor": "HappyHorse", "category": "video", "tier": "pro", "tagline": "Strong reference video." },
-    { "id": "happyhorse-t2v", "name": "HappyHorse Text-to-Video", "vendor": "HappyHorse", "category": "video", "tier": "pro", "tagline": "Pure prompt, no reference." },
-    { "id": "happyhorse-edit", "name": "HappyHorse Video Editing", "vendor": "HappyHorse", "category": "video", "tier": "pro", "tagline": "Edit existing footage with prompts." },
-    { "id": "happyhorse-ff", "name": "HappyHorse First Frame", "vendor": "HappyHorse", "category": "video", "tier": "pro", "tagline": "Frame-locked generation." },
-    { "id": "omni-flash", "name": "Omni Flash 10s", "vendor": "Omni", "category": "video", "tier": "fast", "tagline": "10-second clips in a flash." },
-    { "id": "grok-imagine", "name": "Grok Imagine 1.5", "vendor": "xAI", "category": "video", "tier": "pro", "tagline": "Bold, fast, xAI-style video." },
-    { "id": "vidu-comic", "name": "VIDU Narrated Comic", "vendor": "Vidu", "category": "video", "tier": "pro", "tagline": "Comic strips → narrated video." },
-    { "id": "vidu-mv", "name": "VIDU Music MV", "vendor": "Vidu", "category": "video", "tier": "pro", "tagline": "Music video generator." },
-    { "id": "fable-5", "name": "Fable 5", "vendor": "Fable", "category": "video", "tier": "pro", "tagline": "Story-driven animation." },
-    { "id": "pix-v6-fl", "name": "Pix V6 First/Last Frames", "vendor": "PixVerse", "category": "video", "tier": "pro", "tagline": "V6 controlled transitions." },
-
-    { "id": "suno-4.5", "name": "Suno Music 4.5", "vendor": "Suno", "category": "music", "tier": "flagship", "tagline": "Full songs from a single prompt." },
-    { "id": "suno-4.5-instrumental", "name": "Suno Instrumental 4.5", "vendor": "Suno", "category": "music", "tier": "flagship", "tagline": "Vocals-free composition." },
-
-    { "id": "doubao-tts-2", "name": "Doubao TTS 2.0", "vendor": "ByteDance", "category": "voice", "tier": "flagship", "tagline": "Ultra-natural Mandarin TTS." },
-    { "id": "gemini-3.1-tts", "name": "Gemini 3.1 TTS", "vendor": "Google", "category": "voice", "tier": "flagship", "tagline": "Multilingual voice synthesis." },
-
-    { "id": "comic-agent", "name": "Comic Agent", "vendor": "Package", "category": "agent", "tier": "flagship", "tagline": "Script → storyboard → fully dubbed comic video." },
-    { "id": "ecom-agent", "name": "E-commerce Agent", "vendor": "Package", "category": "agent", "tier": "flagship", "tagline": "Product shots, lifestyle scenes, ad copy in one click." },
-    { "id": "long-video-agent", "name": "Long Video Agent", "vendor": "Package", "category": "agent", "tier": "flagship", "tagline": "Reference images + prompt → coherent long video." },
-    { "id": "style-switch-agent", "name": "Style Switch Agent", "vendor": "Package", "category": "agent", "tier": "flagship", "tagline": "Cyberpunk / ink wash / 3D / cinematic — at will." }
+    {
+      "id": "gpt-5.5",
+      "name": "GPT-5.5",
+      "vendor": "OpenAI",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Best-in-class reasoning, code and conversation.",
+      "upstream": "gpt-5.5",
+      "status": "overseas",
+      "note": "海外账户可用（地区限制）"
+    },
+    {
+      "id": "gpt-5.5-deep",
+      "name": "GPT-5.5 Deep Reasoning",
+      "vendor": "OpenAI",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Maximum depth for hard problems.",
+      "upstream": "gpt-5.5-deep",
+      "status": "overseas"
+    },
+    {
+      "id": "gpt-5.5-high",
+      "name": "GPT-5.5 High Reasoning",
+      "vendor": "OpenAI",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Long, careful chains of thought.",
+      "upstream": "gpt-5.5-high",
+      "status": "overseas"
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "name": "GPT-5.4 mini",
+      "vendor": "OpenAI",
+      "category": "chat",
+      "tier": "fast",
+      "tagline": "Fast, cheap, surprisingly capable.",
+      "upstream": "gpt-5.4-mini",
+      "status": "live",
+      "note": "OpenAI 地区限制；用 Qwen3.5-35B 同级别替代"
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "name": "GPT-5.4 nano",
+      "vendor": "OpenAI",
+      "category": "chat",
+      "tier": "lite",
+      "tagline": "Ultra-low latency for bulk workloads.",
+      "upstream": "gpt-5.4-nano",
+      "status": "live",
+      "note": "OpenAI 地区限制；用 Qwen3.5-9B 更小更快"
+    },
+    {
+      "id": "opus-4-7",
+      "name": "Claude Opus 4.7",
+      "vendor": "Anthropic",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Long context, nuanced writing, careful reasoning.",
+      "upstream": "opus-4-7",
+      "status": "overseas"
+    },
+    {
+      "id": "opus-4-8",
+      "name": "Claude Opus 4.8",
+      "vendor": "Anthropic",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Our most thoughtful model yet.",
+      "upstream": "opus-4-8",
+      "status": "overseas"
+    },
+    {
+      "id": "sonnet-4-5",
+      "name": "Claude Sonnet 4.5",
+      "vendor": "Anthropic",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "The workhorse for everyday intelligence.",
+      "upstream": "sonnet-4-5",
+      "status": "live",
+      "note": "海外走 OpenRouter Claude；国内 fallback 到 Qwen3.5-122B"
+    },
+    {
+      "id": "gemini-3-pro",
+      "name": "Gemini 3 Pro",
+      "vendor": "Google",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Multimodal reasoning at frontier scale.",
+      "upstream": "gemini-3-pro",
+      "status": "overseas"
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "name": "Gemini 3.5 Flash",
+      "vendor": "Google",
+      "category": "chat",
+      "tier": "fast",
+      "tagline": "Speed and quality in one package.",
+      "upstream": "gemini-3.5-flash",
+      "status": "overseas"
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "vendor": "DeepSeek",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Open-weight champion, top reasoning per dollar.",
+      "upstream": "deepseek-v4-pro",
+      "status": "live",
+      "note": "DeepSeek 官方封号；硅基流动 Pro 镜像顶上"
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "vendor": "DeepSeek",
+      "category": "chat",
+      "tier": "fast",
+      "tagline": "Blazing fast, surprisingly strong.",
+      "upstream": "deepseek-v4-flash",
+      "status": "live",
+      "note": "主力模型，多源 failover"
+    },
+    {
+      "id": "qwen-3.7-max",
+      "name": "Qwen 3.7 Max",
+      "vendor": "Alibaba",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Multilingual powerhouse, top Chinese reasoning.",
+      "upstream": "qwen-3.7-max",
+      "status": "live"
+    },
+    {
+      "id": "qwen-3.7-plus",
+      "name": "Qwen 3.7 Plus",
+      "vendor": "Alibaba",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Balanced speed and depth.",
+      "upstream": "qwen-3.7-plus",
+      "status": "live"
+    },
+    {
+      "id": "qwen-3.6-plus",
+      "name": "Qwen 3.6 Plus",
+      "vendor": "Alibaba",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Trusted classic.",
+      "upstream": "qwen-3.6-plus",
+      "status": "live"
+    },
+    {
+      "id": "glm-5.2",
+      "name": "GLM 5.2",
+      "vendor": "Zhipu",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Strong agent and tool use.",
+      "upstream": "glm-5.2",
+      "status": "live",
+      "note": "智谱官方 + 硅基流动镜像 + 字节火山三源"
+    },
+    {
+      "id": "step-3.7-flash",
+      "name": "Step 3.7 Flash",
+      "vendor": "StepFun",
+      "category": "chat",
+      "tier": "fast",
+      "tagline": "Ultra-fast responses.",
+      "upstream": "step-3.7-flash",
+      "status": "live"
+    },
+    {
+      "id": "mimo-v2.5-pro",
+      "name": "Mimo V2.5 Pro",
+      "vendor": "Xiaomi",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Compact, capable, multilingual.",
+      "upstream": "mimo-v2.5-pro",
+      "status": "live"
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "vendor": "MiniMax",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Balanced general intelligence.",
+      "upstream": "minimax-m3",
+      "status": "live",
+      "note": "默认模型；硅基流动 MiniMax M2.5"
+    },
+    {
+      "id": "minimax-m2.7",
+      "name": "MiniMax M2.7",
+      "vendor": "MiniMax",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Previous-gen workhorse.",
+      "upstream": "minimax-m2.7",
+      "status": "live"
+    },
+    {
+      "id": "grok-4.20",
+      "name": "Grok 4.20",
+      "vendor": "xAI",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "Real-time knowledge with attitude.",
+      "upstream": "grok-4.20",
+      "status": "overseas"
+    },
+    {
+      "id": "grok-4.3",
+      "name": "Grok 4.3",
+      "vendor": "xAI",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "Fast, witty, web-connected.",
+      "upstream": "grok-4.3",
+      "status": "overseas"
+    },
+    {
+      "id": "banana-2",
+      "name": "Banana 2 Official",
+      "vendor": "Package Relay",
+      "category": "image",
+      "tier": "flagship",
+      "tagline": "Photoreal + studio aesthetics.",
+      "upstream": "banana-2",
+      "status": "live",
+      "note": "Banana 真模型待接入；先上 Tongyi Z-Image 开源版"
+    },
+    {
+      "id": "banana-pro",
+      "name": "Banana Pro Official",
+      "vendor": "Package Relay",
+      "category": "image",
+      "tier": "flagship",
+      "tagline": "Pro-grade commercial imagery.",
+      "upstream": "banana-pro",
+      "status": "live"
+    },
+    {
+      "id": "gpt-image-2",
+      "name": "GPT Image 2",
+      "vendor": "OpenAI",
+      "category": "image",
+      "tier": "flagship",
+      "tagline": "Native image generation in chat models.",
+      "upstream": "gpt-image-2",
+      "status": "overseas"
+    },
+    {
+      "id": "gpt-image-2-pro",
+      "name": "GPT Image 2 Pro",
+      "vendor": "OpenAI",
+      "category": "image",
+      "tier": "pro",
+      "tagline": "High-resolution, brand-safe.",
+      "upstream": "gpt-image-2-pro",
+      "status": "overseas"
+    },
+    {
+      "id": "vidu-image-2",
+      "name": "Vidu Image 2",
+      "vendor": "Vidu",
+      "category": "image",
+      "tier": "pro",
+      "tagline": "Cinematic, painterly, character-consistent.",
+      "upstream": "vidu-image-2",
+      "status": "coming-soon"
+    },
+    {
+      "id": "wanxiang-2.7",
+      "name": "Wanxiang 2.7 Image",
+      "vendor": "Alibaba",
+      "category": "image",
+      "tier": "pro",
+      "tagline": "Asian aesthetics done right.",
+      "upstream": "wanxiang-2.7",
+      "status": "live",
+      "note": "字节火山 Seedream 替代；硅基流动开源版"
+    },
+    {
+      "id": "qwen-image",
+      "name": "Qwen Image",
+      "vendor": "Alibaba",
+      "category": "image",
+      "tier": "pro",
+      "tagline": "Text in images, done well.",
+      "upstream": "qwen-image",
+      "status": "live",
+      "note": "Qwen VL 系列支持图像理解"
+    },
+    {
+      "id": "sora-2",
+      "name": "Sora 2",
+      "vendor": "OpenAI",
+      "category": "video",
+      "tier": "flagship",
+      "tagline": "Cinematic text-to-video, native audio.",
+      "upstream": "sora-2",
+      "status": "overseas"
+    },
+    {
+      "id": "veo-3.1",
+      "name": "Veo 3.1",
+      "vendor": "Google",
+      "category": "video",
+      "tier": "flagship",
+      "tagline": "4K cinematic with synced audio.",
+      "upstream": "veo-3.1",
+      "status": "overseas"
+    },
+    {
+      "id": "veo-3.1-lite",
+      "name": "Veo 3.1 Lite",
+      "vendor": "Google",
+      "category": "video",
+      "tier": "fast",
+      "tagline": "Speed-optimised Veo.",
+      "upstream": "veo-3.1-lite",
+      "status": "overseas"
+    },
+    {
+      "id": "kling-2.6",
+      "name": "Kling 2.6 Pro",
+      "vendor": "Kuaishou",
+      "category": "video",
+      "tier": "flagship",
+      "tagline": "Realistic motion, character consistency.",
+      "upstream": "kling-2.6",
+      "status": "coming-soon"
+    },
+    {
+      "id": "vidu-q3-turbo",
+      "name": "Vidu Q3 Turbo",
+      "vendor": "Vidu",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Reference-to-video in seconds.",
+      "upstream": "vidu-q3-turbo",
+      "status": "coming-soon"
+    },
+    {
+      "id": "vidu-q3-ref",
+      "name": "Vidu Q3 Reference-to-Video",
+      "vendor": "Vidu",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Animate any reference image.",
+      "upstream": "vidu-q3-ref",
+      "status": "coming-soon"
+    },
+    {
+      "id": "pix-c1-ref",
+      "name": "Pix C1 Reference-to-Video",
+      "vendor": "PixVerse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Cinematic animation from a single frame.",
+      "upstream": "pix-c1-ref",
+      "status": "coming-soon"
+    },
+    {
+      "id": "pix-c1-fl",
+      "name": "Pix C1 First/Last Frames",
+      "vendor": "PixVerse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Controlled transitions.",
+      "upstream": "pix-c1-fl",
+      "status": "coming-soon"
+    },
+    {
+      "id": "wanxiang-vid",
+      "name": "Wanxiang 2.7 Video",
+      "vendor": "Alibaba",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Versatile video, top quality/cost.",
+      "upstream": "wanxiang-vid",
+      "status": "live",
+      "note": "硅基流动 Wan 2.2 T2V 顶上"
+    },
+    {
+      "id": "wanxiang-vid-ext",
+      "name": "Wanxiang 2.7 Video Extend",
+      "vendor": "Alibaba",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Continue any clip seamlessly.",
+      "upstream": "wanxiang-vid-ext",
+      "status": "live"
+    },
+    {
+      "id": "happyhorse-ref",
+      "name": "HappyHorse Reference",
+      "vendor": "HappyHorse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Strong reference video.",
+      "upstream": "happyhorse-ref",
+      "status": "coming-soon"
+    },
+    {
+      "id": "happyhorse-t2v",
+      "name": "HappyHorse Text-to-Video",
+      "vendor": "HappyHorse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Pure prompt, no reference.",
+      "upstream": "happyhorse-t2v",
+      "status": "coming-soon"
+    },
+    {
+      "id": "happyhorse-edit",
+      "name": "HappyHorse Video Editing",
+      "vendor": "HappyHorse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Edit existing footage with prompts.",
+      "upstream": "happyhorse-edit",
+      "status": "coming-soon"
+    },
+    {
+      "id": "happyhorse-ff",
+      "name": "HappyHorse First Frame",
+      "vendor": "HappyHorse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Frame-locked generation.",
+      "upstream": "happyhorse-ff",
+      "status": "coming-soon"
+    },
+    {
+      "id": "omni-flash",
+      "name": "Omni Flash 10s",
+      "vendor": "Omni",
+      "category": "video",
+      "tier": "fast",
+      "tagline": "10-second clips in a flash.",
+      "upstream": "omni-flash",
+      "status": "coming-soon"
+    },
+    {
+      "id": "grok-imagine",
+      "name": "Grok Imagine 1.5",
+      "vendor": "xAI",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Bold, fast, xAI-style video.",
+      "upstream": "grok-imagine",
+      "status": "overseas"
+    },
+    {
+      "id": "vidu-comic",
+      "name": "VIDU Narrated Comic",
+      "vendor": "Vidu",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Comic strips → narrated video.",
+      "upstream": "vidu-comic",
+      "status": "coming-soon"
+    },
+    {
+      "id": "vidu-mv",
+      "name": "VIDU Music MV",
+      "vendor": "Vidu",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Music video generator.",
+      "upstream": "vidu-mv",
+      "status": "coming-soon"
+    },
+    {
+      "id": "fable-5",
+      "name": "Fable 5",
+      "vendor": "Fable",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "Story-driven animation.",
+      "upstream": "fable-5",
+      "status": "overseas"
+    },
+    {
+      "id": "pix-v6-fl",
+      "name": "Pix V6 First/Last Frames",
+      "vendor": "PixVerse",
+      "category": "video",
+      "tier": "pro",
+      "tagline": "V6 controlled transitions.",
+      "upstream": "pix-v6-fl",
+      "status": "coming-soon"
+    },
+    {
+      "id": "suno-4.5",
+      "name": "Suno Music 4.5",
+      "vendor": "Suno",
+      "category": "music",
+      "tier": "flagship",
+      "tagline": "Full songs from a single prompt.",
+      "upstream": "suno-4.5",
+      "status": "demo",
+      "note": "音乐生成暂未接入；先用 MOSS TTS 演示"
+    },
+    {
+      "id": "suno-4.5-instrumental",
+      "name": "Suno Instrumental 4.5",
+      "vendor": "Suno",
+      "category": "music",
+      "tier": "flagship",
+      "tagline": "Vocals-free composition.",
+      "upstream": "suno-4.5-instrumental",
+      "status": "coming-soon"
+    },
+    {
+      "id": "doubao-tts-2",
+      "name": "Doubao TTS 2.0",
+      "vendor": "ByteDance",
+      "category": "voice",
+      "tier": "flagship",
+      "tagline": "Ultra-natural Mandarin TTS.",
+      "upstream": "doubao-tts-2",
+      "status": "live",
+      "note": "字节火山豆包 TTS 待 endpoint；硅基流动 CosyVoice 顶上"
+    },
+    {
+      "id": "gemini-3.1-tts",
+      "name": "Gemini 3.1 TTS",
+      "vendor": "Google",
+      "category": "voice",
+      "tier": "flagship",
+      "tagline": "Multilingual voice synthesis.",
+      "upstream": "gemini-3.1-tts",
+      "status": "live"
+    },
+    {
+      "id": "comic-agent",
+      "name": "Comic Agent",
+      "vendor": "Package",
+      "category": "agent",
+      "tier": "flagship",
+      "tagline": "Script → storyboard → fully dubbed comic video.",
+      "upstream": "comic-agent",
+      "status": "demo",
+      "note": "Agent 是上层编排（chain LLM calls），模型用 Qwen Max"
+    },
+    {
+      "id": "ecom-agent",
+      "name": "E-commerce Agent",
+      "vendor": "Package",
+      "category": "agent",
+      "tier": "flagship",
+      "tagline": "Product shots, lifestyle scenes, ad copy in one click.",
+      "upstream": "ecom-agent",
+      "status": "demo"
+    },
+    {
+      "id": "long-video-agent",
+      "name": "Long Video Agent",
+      "vendor": "Package",
+      "category": "agent",
+      "tier": "flagship",
+      "tagline": "Reference images + prompt → coherent long video.",
+      "upstream": "long-video-agent",
+      "status": "coming-soon"
+    },
+    {
+      "id": "style-switch-agent",
+      "name": "Style Switch Agent",
+      "vendor": "Package",
+      "category": "agent",
+      "tier": "flagship",
+      "tagline": "Cyberpunk / ink wash / 3D / cinematic — at will.",
+      "upstream": "style-switch-agent",
+      "status": "coming-soon"
+    }
   ]
 }

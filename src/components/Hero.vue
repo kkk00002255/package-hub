@@ -1,5 +1,8 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
 import { Sparkles, Zap, ArrowRight, Play } from '@lucide/vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -12,42 +15,42 @@ import { Sparkles, Zap, ArrowRight, Play } from '@lucide/vue'
       <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
         <div class="chip chip-brand mb-5 animate-fade-in">
           <Sparkles class="h-3.5 w-3.5" />
-          Now with Veo 3.1 · Sora 2 · GPT-5.5 · Claude Opus 4.8
+          {{ t('hero.chip') }}
         </div>
 
         <h1 class="text-balance text-4xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight">
-          Every AI model.
+          {{ t('hero.title1') }}
           <span class="block mt-1">
-            <span class="grad-text">One package.</span>
+            <span class="grad-text">{{ t('hero.title2') }}</span>
           </span>
         </h1>
 
         <p class="mt-6 max-w-2xl text-balance text-base sm:text-lg text-ink-300 leading-relaxed">
-          Chat, draw, animate, compose. Package brings together 100+ leading AI models — chat, image, video, music, voice, agents — behind one subscription and one clean API.
+          {{ t('hero.desc') }}
         </p>
 
         <div class="mt-9 flex flex-col sm:flex-row items-center gap-3">
           <router-link to="/try" class="btn btn-primary px-6 py-3 text-sm">
-            <Zap class="h-4 w-4" /> Start creating free
+            <Zap class="h-4 w-4" /> {{ t('hero.ctaPrimary') }}
             <ArrowRight class="h-4 w-4" />
           </router-link>
           <a href="#inspiration" class="btn btn-ghost px-6 py-3 text-sm">
-            <Play class="h-4 w-4" /> See what's possible
+            <Play class="h-4 w-4" /> {{ t('hero.ctaSecondary') }}
           </a>
         </div>
 
         <div class="mt-14 grid grid-cols-3 gap-6 sm:gap-10 w-full max-w-xl">
           <div class="text-center">
             <div class="text-3xl sm:text-4xl font-bold tracking-tight"><span class="grad-text">100+</span></div>
-            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">AI Models</div>
+            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">{{ t('hero.stat.models') }}</div>
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl font-bold tracking-tight"><span class="grad-text">10K+</span></div>
-            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">Creators</div>
+            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">{{ t('hero.stat.creators') }}</div>
           </div>
           <div class="text-center">
             <div class="text-3xl sm:text-4xl font-bold tracking-tight"><span class="grad-text">∞</span></div>
-            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">Possibilities</div>
+            <div class="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-ink-400">{{ t('hero.stat.possibilities') }}</div>
           </div>
         </div>
       </div>
@@ -58,10 +61,10 @@ import { Sparkles, Zap, ArrowRight, Play } from '@lucide/vue'
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2 text-xs text-ink-400">
               <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]"></span>
-              Models online
+              {{ t('hero.preview.label') }}
             </div>
             <router-link to="/models" class="text-xs text-ink-300 hover:text-white inline-flex items-center gap-1">
-              Browse all <ArrowRight class="h-3.5 w-3.5" />
+              {{ t('hero.preview.browse') }} <ArrowRight class="h-3.5 w-3.5" />
             </router-link>
           </div>
           <div class="flex flex-wrap gap-2">

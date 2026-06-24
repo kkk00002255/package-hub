@@ -6,7 +6,9 @@
   :root {
     color-scheme: dark;
   }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   html, body { @apply bg-ink-950 text-ink-100; }
+  [id] { scroll-margin-top: 80px; }
   body {
     background-image:
       radial-gradient(circle at 15% -10%, rgba(139,92,246,0.12), transparent 40%),

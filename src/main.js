@@ -8,6 +8,7 @@ import HomeView from './views/HomeView.vue'
 import ModelsView from './views/ModelsView.vue'
 import PricingView from './views/PricingView.vue'
 import TryView from './views/TryView.vue'
+import AgentsView from './views/AgentsView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,11 +16,15 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView, meta: { title: 'Package — One Platform, Every AI Model' } },
     { path: '/models', name: 'models', component: ModelsView, meta: { title: 'All Models · Package' } },
     { path: '/pricing', name: 'pricing', component: PricingView, meta: { title: 'Pricing · Package' } },
-    { path: '/try/:model?', name: 'try', component: TryView, meta: { title: 'Try it · Package' } }
+    { path: '/try/:model?', name: 'try', component: TryView, meta: { title: 'Try it · Package' } },
+    { path: '/agents', name: 'agents', component: AgentsView, meta: { title: 'AI Agents · Package' } }
   ],
   scrollBehavior(to, from, saved) {
     if (saved) return saved
-    return { top: 0, behavior: 'smooth' }
+    if (to.hash) {
+      return { el: to.hash, top: 80, behavior: 'smooth' }
+    }
+    return { top: 0 }
   }
 })
 

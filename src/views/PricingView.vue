@@ -1,111 +1,87 @@
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Check, Sparkles, ArrowRight } from '@lucide/vue'
 
-const tiers = [
-  {
-    name: 'Free',
-    price: '$0',
-    cadence: 'forever',
-    desc: 'Try every model with daily credits. Perfect for kicking the tires.',
-    cta: 'Start free',
-    href: '/try',
-    highlight: false,
-    features: [
-      'Daily free credits across all models',
-      'Access to 100+ flagship models',
-      'Standard generation queue',
-      'Community gallery'
-    ]
-  },
-  {
-    name: 'Pro',
-    price: '$19',
-    cadence: 'per month',
-    desc: 'For creators shipping real work. Priority queue, more credits, faster.',
-    cta: 'Go Pro',
-    href: '/try',
-    highlight: true,
-    features: [
-      '20× more daily credits than Free',
-      'Priority generation queue',
-      'Commercial usage license',
-      'Higher resolution outputs',
-      'Email support'
-    ]
-  },
-  {
-    name: 'Team',
-    price: '$79',
-    cadence: 'per seat / month',
-    desc: 'Shared workspace, unified billing, API access. Built for small teams.',
-    cta: 'Talk to us',
-    href: '#',
-    highlight: false,
-    features: [
-      'Everything in Pro',
-      'Shared team workspace',
-      'Unified billing & invoices',
-      'OpenAI-compatible API access',
-      'Dedicated channel support'
-    ]
-  }
+const { t } = useI18n()
+
+// Static tier meta: name (i18n key), price (i18n key), cadence (i18n key), desc (i18n key), cta (i18n key), features (i18n keys), href, highlight, badge (i18n key, optional)
+const tierDefs = [
+  { id: 'free',       featureKeys: ['pricing.free.f1', 'pricing.free.f2', 'pricing.free.f3', 'pricing.free.f4'], href: '/try', highlight: false },
+  { id: 'pro',        featureKeys: ['pricing.pro.f1',  'pricing.pro.f2',  'pricing.pro.f3',  'pricing.pro.f4',  'pricing.pro.f5'],  href: '/try', highlight: true,  badgeKey: 'pricing.pro.badge' },
+  { id: 'team',       featureKeys: ['pricing.team.f1', 'pricing.team.f2', 'pricing.team.f3', 'pricing.team.f4', 'pricing.team.f5'], href: '#',    highlight: false },
+  { id: 'enterprise', featureKeys: ['pricing.enterprise.f1', 'pricing.enterprise.f2', 'pricing.enterprise.f3', 'pricing.enterprise.f4', 'pricing.enterprise.f5'], href: 'mailto:sales@package.ai?subject=Enterprise%20inquiry', highlight: false }
 ]
+
+const tiers = computed(() =>
+  tierDefs.map(d => ({
+    name: t(`pricing.${d.id}.name`),
+    price: t(`pricing.${d.id}.price`),
+    cadence: t(`pricing.${d.id}.cadence`),
+    desc: t(`pricing.${d.id}.desc`),
+    cta: t(`pricing.${d.id}.cta`),
+    features: d.featureKeys.map(k => t(k)),
+    href: d.href,
+    highlight: d.highlight,
+    badge: d.badgeKey ? t(d.badgeKey) : null
+  }))
+)
 </script>
 
 <template>
   <section class="relative py-20 sm:py-24">
     <div class="container-x">
       <div class="mx-auto max-w-3xl text-center">
-        <div class="section-title-eyebrow mx-auto">Pricing</div>
+        <div class="section-title-eyebrow mx-auto">{{ t('pricing.eyebrow') }}</div>
         <h1 class="mt-4 text-4xl sm:text-6xl font-bold tracking-tight text-balance">
-          Simple plans. <span class="grad-text">Honest pricing.</span>
+          {{ t('pricing.title1') }} <span class="grad-text">{{ t('pricing.title2') }}</span>
         </h1>
         <p class="mt-5 text-ink-400 text-base sm:text-lg">
-          One subscription, every model. Cancel anytime. No per-model juggling.
+          {{ t('pricing.desc') }}
         </p>
       </div>
 
-      <div class="mt-14 grid gap-5 lg:grid-cols-3">
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div
-          v-for="t in tiers"
-          :key="t.name"
+          v-for="tier in tiers"
+          :key="tier.name"
           class="relative rounded-2xl p-7 transition-all"
-          :class="t.highlight
+          :class="tier.highlight
             ? 'grad-border shadow-glow-brand lg:scale-[1.03]'
             : 'border border-white/10 bg-white/[0.03]'"
         >
-          <div v-if="t.highlight" class="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span class="chip chip-brand"><Sparkles class="h-3 w-3" /> Most popular</span>
+          <div v-if="tier.badge" class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="chip chip-brand"><Sparkles class="h-3 w-3" /> {{ tier.badge }}</span>
           </div>
 
           <div class="flex items-baseline justify-between">
-            <h3 class="text-lg font-semibold text-white">{{ t.name }}</h3>
+            <h3 class="text-lg font-semibold text-white">{{ tier.name }}</h3>
           </div>
           <div class="mt-5 flex items-baseline gap-2">
-            <span class="text-5xl font-bold tracking-tight" :class="t.highlight ? 'grad-text' : 'text-white'">{{ t.price }}</span>
-            <span class="text-sm text-ink-400">{{ t.cadence }}</span>
+            <span class="text-5xl font-bold tracking-tight" :class="tier.highlight ? 'grad-text' : 'text-white'">{{ tier.price }}</span>
+            <span class="text-sm text-ink-400">{{ tier.cadence }}</span>
           </div>
-          <p class="mt-3 text-sm text-ink-400 leading-relaxed">{{ t.desc }}</p>
+          <p class="mt-3 text-sm text-ink-400 leading-relaxed">{{ tier.desc }}</p>
 
           <ul class="mt-6 space-y-2.5 text-sm">
-            <li v-for="f in t.features" :key="f" class="flex items-start gap-2.5 text-ink-200">
+            <li v-for="f in tier.features" :key="f" class="flex items-start gap-2.5 text-ink-200">
               <Check class="h-4 w-4 mt-0.5 text-cyan-300 shrink-0" /> <span>{{ f }}</span>
             </li>
           </ul>
 
           <a
-            :href="t.href"
+            :href="tier.href"
             class="btn mt-7 w-full"
-            :class="t.highlight ? 'btn-primary' : 'btn-ghost'"
+            :class="tier.highlight ? 'btn-primary' : 'btn-ghost'"
           >
-            {{ t.cta }}
+            {{ tier.cta }}
             <ArrowRight class="h-4 w-4" />
           </a>
         </div>
       </div>
 
       <p class="mt-10 text-center text-sm text-ink-500">
-        Need API access, custom limits, or an enterprise contract? <a href="#" class="text-ink-300 hover:text-white underline-offset-4 hover:underline">Talk to us</a>.
+        {{ t('pricing.contact') }} <a href="#" class="text-ink-300 hover:text-white underline-offset-4 hover:underline">{{ t('pricing.contactCta') }}</a>.
       </p>
     </div>
   </section>

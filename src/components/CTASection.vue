@@ -1,5 +1,8 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
 import { Sparkles, ArrowRight, Headphones } from '@lucide/vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -15,25 +18,25 @@ import { Sparkles, ArrowRight, Headphones } from '@lucide/vue'
 
         <div class="relative mx-auto max-w-3xl text-center">
           <div class="section-title-eyebrow mx-auto">
-            <Sparkles class="h-3 w-3" /> Start now
+            <Sparkles class="h-3 w-3" /> {{ t('cta.eyebrow') }}
           </div>
           <h2 class="mt-5 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-balance">
-            Your <span class="grad-text">AI creation</span> journey starts here.
+            {{ t('cta.title1') }} <span class="grad-text">{{ t('cta.title2') }}</span> {{ t('cta.title3') }}
           </h2>
           <p class="mt-5 text-ink-300 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            No app switching. No juggling subscriptions. Just open Package and start making.
+            {{ t('cta.desc') }}
           </p>
 
           <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
             <router-link to="/try" class="btn btn-primary px-7 py-3 text-sm">
-              <Sparkles class="h-4 w-4" /> Start free
+              <Sparkles class="h-4 w-4" /> {{ t('cta.primary') }}
               <ArrowRight class="h-4 w-4" />
             </router-link>
             <a href="#" class="btn btn-ghost px-7 py-3 text-sm">
-              <Headphones class="h-4 w-4" /> Talk to support
+              <Headphones class="h-4 w-4" /> {{ t('cta.secondary') }}
             </a>
           </div>
-          <p class="mt-6 text-xs text-ink-500">No credit card required · Free tier every day</p>
+          <p class="mt-6 text-xs text-ink-500">{{ t('cta.fineprint') }}</p>
         </div>
       </div>
     </div>
