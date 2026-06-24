@@ -177,8 +177,9 @@ async function sendVideo(prompt) {
         prompt,
         model: selected.value.upstream,
         image: inputImage, // I2V 需要输入图（从最近生成的图片自动获取）
-        frames: 240,       // 20 秒视频
+        frames: 60,        // 5 秒视频（Vercel 60s 超时）
         fps: 12,
+        duration: 5,       // 用户可改：5/10/15/20
       })
     })
     let data

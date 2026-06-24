@@ -6,10 +6,17 @@ import { generateVideo } from './_lib/multimodal.js';
 
 const MAX_PROMPT_LEN = 2000;
 
-// 默认参数：20 秒视频，12 fps = 240 frames
-const DEFAULT_FRAMES = 240;
+// 默认参数：5 秒视频（适配 Vercel Function 60s 超时）
+// Vercel Hobby plan 60s 超时，Pro 300s
+// 5s 视频 ~30-60s 可跑通，10s 视频 ~60-120s 可能超时，20s 视频 ~120-180s 必超时
+const DEFAULT_FRAMES = 60;   // 5 秒 @ 12fps
 const DEFAULT_FPS = 12;
-const MAX_FRAMES = 480; // 40 秒上限
+const MAX_FRAMES_Hobby = 120; // 10 秒上限（Hobby）
+const MAX_FRAMES_Pro = 480;   // 40 秒上限（Pro）
+
+// 根据 Vercel plan 限制 max frames
+const isProPlan = process.env.VERCEL_PLAN === 'pro';
+const MAX_FRAMES = isProPlan ? MAX_FRAMES_Pro : MAX_FRAMES_Hobby;
 
 const MODEL_ROUTING = {
   // I2V（图生视频）作为默认 — 主人主要用例是"把生成的图变成视频"
@@ -52,8 +59,16 @@ export default async function handler(req, res) {
 
   res.setHeader('Cache-Control', 'no-cache');
 
-  // 参数：默认 20 秒视频（240 frames × 12 fps）
-  const frames = Math.min(MAX_FRAMES, Math.max(16, Number(body.frames) || DEFAULT_FRAMES));
+  // 参数：用户可传 duration (秒) 或 frames (具体值)
+  // 默认 5 秒 (60 frames × 12 fps)
+  let frames;
+  if (body.duration && !body.frames) {
+    // duration 秒 → frames
+    const duration = Math.max(3, Math.min(isProPlan ? 40 : 10, Number(body.duration) || 5));
+    frames = Math.round(duration * DEFAULT_FPS);
+  } else {
+    frames = Math.min(MAX_FRAMES, Math.max(16, Number(body.frames) || DEFAULT_FRAMES));
+  }
   const fps = Math.min(24, Math.max(8, Number(body.fps) || DEFAULT_FPS));
   const seconds = Math.round((frames / fps) * 10) / 10;
 
