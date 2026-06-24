@@ -231,6 +231,7 @@ async function sendAudio(text) {
   } finally {
     sending.value = false
   }
+}
 </script>
 
 <template>
