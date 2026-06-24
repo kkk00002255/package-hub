@@ -363,7 +363,9 @@ export function selectUpstream(modelId, opts = {}) {
     throw new Error(`Model "${modelId}" has no upstream configured`);
   }
 
-  const isCN = opts.country === 'CN';
+  // 默认按 CN 优先（Vercel Function 不一定发 x-vercel-ip-country header）
+  // 只有明确传 'US' 或其他非 CN/XX 才按海外优先
+  const isCN = opts.country !== 'US' && opts.country !== 'GB' && opts.country !== 'JP' && opts.country !== 'KR';
   let candidates = [...cfg.candidates];
 
   // 过滤：去掉没有 key 的上游（部署时跳过；开发时跳过未配置的上游）

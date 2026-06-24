@@ -43,10 +43,12 @@ export default async function handler(req, res) {
   const maxTokens = Math.min(MAX_TOKENS_CAP, Number(body.max_tokens) || 4000);
 
   // 用户地区（多平台兼容）
+  // 默认 'CN'（Package 站主用户是国内）
   const country =
-    req.headers['x-vercel-ip-country'] ||  // Vercel
+    req.headers['x-vercel-ip-country'] ||  // Vercel (Pro plan)
     req.headers['cf-ipcountry'] ||          // Cloudflare
-    'XX';
+    req.headers['x-country'] ||             // 自定义
+    'CN';
 
   try {
     const { data, candidate } = await callWithFailover(requestedModel, messages, {
