@@ -459,40 +459,38 @@ function regen() {
             </div>
           </div>
 
-          <!-- 模型选择（折叠） -->
-          <details class="mt-4 lg:hidden">
-            <summary class="text-[11px] uppercase tracking-wider text-ink-500 px-2 py-1 cursor-pointer">{{ t('try.pickModel') }}</summary>
-            <div class="mt-2 max-h-60 overflow-y-auto space-y-1">
-              <div v-for="g in grouped" :key="g.id">
-                <div class="px-1 text-[10px] uppercase tracking-wider text-ink-500 mt-2">{{ g.label }}</div>
-                <button v-for="m in g.items" :key="m.id"
-                        @click="selectedId = m.id; activeSession.modelId = m.id"
-                        :class="['w-full text-left px-3 py-1.5 rounded text-sm transition',
-                                 selectedId === m.id ? 'bg-white/10 text-white' : 'text-ink-300 hover:bg-white/5']">
-                  {{ m.name }}
-                </button>
-              </div>
-            </div>
-          </details>
         </aside>
 
         <!-- 中间: workspace -->
         <div class="grad-border flex flex-col min-h-[80vh]">
           <!-- header -->
-          <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/5">
+          <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-white/5 flex-wrap">
             <div class="flex items-center gap-3 min-w-0">
-              <button @click="sidebarOpen = true" class="lg:hidden p-1.5 rounded hover:bg-white/5">
+              <button @click="sidebarOpen = true" class="lg:hidden p-1.5 rounded hover:bg-white/5 shrink-0">
                 <MessageSquare class="h-4 w-4" />
               </button>
-              <div class="min-w-0">
+              <div class="hidden sm:block min-w-0">
                 <div class="text-[10px] uppercase tracking-wider text-ink-500">{{ t('try.workspace') }}</div>
-                <div class="text-sm font-semibold text-white truncate flex items-center gap-2">
-                  {{ activeModel.name }}
-                  <span class="text-ink-500 font-normal hidden sm:inline">· {{ activeModel.vendor }}</span>
-                </div>
+                <div class="text-sm font-semibold text-white truncate">{{ activeModel.vendor }}</div>
               </div>
             </div>
-            <span class="chip" :class="isLive ? '' : 'opacity-60'">
+
+            <!-- Model picker (桌面端可见) -->
+            <div class="flex items-center gap-2 flex-1 sm:flex-initial min-w-0 max-w-full">
+              <label class="text-[10px] uppercase tracking-wider text-ink-500 shrink-0 hidden md:inline">{{ t('try.pickModel') }}</label>
+              <select
+                v-model="selectedId"
+                @change="if(activeSession) activeSession.modelId = selectedId"
+                class="flex-1 sm:flex-initial min-w-0 max-w-[280px] sm:max-w-[340px] px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.07] cursor-pointer">
+                <optgroup v-for="g in grouped" :key="g.id" :label="g.label">
+                  <option v-for="m in g.items" :key="m.id" :value="m.id">
+                    {{ m.name }}{{ m.tier === 'flagship' ? ' ★' : '' }}{{ m.status === 'overseas' ? ' (海外)' : m.status === 'demo' ? ' (demo)' : m.status === 'coming-soon' ? ' (即将)' : '' }}
+                  </option>
+                </optgroup>
+              </select>
+            </div>
+
+            <span class="chip shrink-0" :class="isLive ? '' : 'opacity-60'">
               <span class="h-1.5 w-1.5 rounded-full"
                     :class="isLive ? 'bg-emerald-400' : isOverseas ? 'bg-sky-400' : isComingSoon ? 'bg-ink-500' : 'bg-amber-400'"></span>
               {{ isLive ? t('try.status.live') : isOverseas ? t('try.status.overseas') : isComingSoon ? t('try.status.coming-soon') : t('try.status.demo') }}
