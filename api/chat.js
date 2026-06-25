@@ -1,98 +1,105 @@
 // api/chat.js
 // /api/chat 端点 — Package 站 chat 统一入口（thin forward to NewAPI）
-// Owner: 虾 | 2026-06-25 v3: 扩展 MODEL_MAP + 加智能 fallback
+// Owner: 虾 | 2026-06-25 v6: 硅基流动账户实测可用 8 个 model (其他被账户 disabled)
 //
-// 配置（Vercel Dashboard → Environment Variables）：
+// 6-25 14:53 完整测试：硅基 43 个 model 中只有 8 个 OK，25 个 disabled，8 个不存在
+// 主人有余额 ¥39 + 实名认证，但账户对部分 model 限流（需要单独申请）
+//
+// 配置（Vercel env var）：
 //   NEWAPI_URL  = NewAPI 公网地址
-//   NEWAPI_KEY  = NewAPI business token (48 字符)
+//   NEWAPI_KEY  = *** business token (48 字符)
 
 const MAX_INPUT_CHARS = 16000;
 const TIMEOUT_MS = 60000;
 
 // 模型映射：前端 ID → NewAPI 实际 model name
-// 涵盖 6-25 13:00 时前端 13 个 live chat model + 营销热门名字
+// 实测 6-25 14:53 所有可用的 model
 const MODEL_MAP = {
-  // === OpenAI 系列（替代品） ===
-  'gpt-5.4-mini': 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'gpt-5.4-nano': 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-  'gpt-5.4':      'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'gpt-5.3':      'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'gpt-5':        'deepseek-ai/DeepSeek-V4-Flash',
-  'gpt-5-mini':   'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'gpt-4o':       'openai/gpt-4o',
-  'gpt-4o-mini':  'openai/gpt-4o-mini',
+  // === OpenAI 系列（硅基账户用 Pro/deepseek-ai/DeepSeek-V3 或 Pro/Qwen/Qwen2.5 替代） ===
+  'gpt-5.4-mini':  'Qwen/Qwen2.5-7B-Instruct',         // 快+便宜
+  'gpt-5.4-nano':  'Qwen/Qwen2.5-7B-Instruct',         // 更快
+  'gpt-5.4':       'Qwen/Qwen2.5-32B-Instruct',
+  'gpt-5.3':       'Qwen/Qwen2.5-32B-Instruct',
+  'gpt-5':         'deepseek-ai/DeepSeek-V4-Flash',     // 主力
+  'gpt-5-mini':    'Qwen/Qwen2.5-7B-Instruct',
+  'gpt-4o':        'Pro/deepseek-ai/DeepSeek-V3',      // 海外 model 替代
+  'gpt-4o-mini':   'Pro/Qwen/Qwen2.5-7B-Instruct',
   
-  // === Anthropic 系列（替代品） ===
-  'opus-4-7':     'THUDM/glm-4-9b-chat',
+  // === Anthropic 系列（用智谱/百川替代） ===
+  'opus-4-7':     'glm-4-plus',                        // 智谱大杯
   'opus-4-8':     'glm-4-plus',
-  'sonnet-4-5':   'glm-4-flash',
-  'haiku-4-5':    'glm-4-air',
+  'sonnet-4-5':   'glm-4-flash',                       // 智谱
+  'haiku-4-5':    'glm-4-air',                         // 智谱
   
-  // === Google Gemini 系列（替代品） ===
-  'gemini-3-pro':     'baidu/ERNIE-4.5-300B-A47B',
-  'gemini-3.5-flash': 'THUDM/glm-4-9b-chat',
+  // === Google Gemini 系列（智谱/百川替代） ===
+  'gemini-3-pro':     'glm-4-plus',
+  'gemini-3.5-flash': 'glm-4-flash',
   'gemini-3-flash':   'glm-4-flash',
   
-  // === DeepSeek 原生 ===
-  'deepseek-r1':       'deepseek-ai/DeepSeek-V4-Flash',
-  'deepseek-v3.5':     'deepseek-ai/DeepSeek-V4-Flash',
-  'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',
+  // === DeepSeek 原生（硅基账户实测 OK） ===
+  'deepseek-r1':       'deepseek-ai/DeepSeek-V3',      // R1 在硅基不可用，用 V3
+  'deepseek-v3.5':     'deepseek-ai/DeepSeek-V3',
+  'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',  // 主力
   'deepseek-v4-pro':   'deepseek-ai/DeepSeek-V4-Flash',
   
-  // === Qwen 原生 ===
-  'qwen3-max':   'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'qwen3-coder': 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-  'qwen3-235b':  'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'qwen-3.7-max':   'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'qwen-3.7-plus':  'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-  'qwen-3.6-plus':  'Qwen/Qwen3-235B-A22B-Instruct-2507',
+  // === Qwen 原生（硅基账户实测 OK） ===
+  'qwen3-max':     'Qwen/Qwen3-32B',
+  'qwen3-coder':   'Qwen/Qwen2.5-32B-Instruct',         // Qwen3-coder 不在，用 Qwen2.5
+  'qwen3-235b':    'Qwen/Qwen2.5-72B-Instruct',         // Qwen3-235B 不在，用 2.5-72B
+  'qwen-3.7-max':  'Qwen/Qwen2.5-72B-Instruct',
+  'qwen-3.7-plus': 'Qwen/Qwen2.5-32B-Instruct',
+  'qwen-3.6-plus': 'Qwen/Qwen2.5-32B-Instruct',
   
   // === 智谱 GLM 原生 ===
-  'glm-5':        'glm-4-plus',
-  'glm-5.2':      'glm-4-plus',
-  'glm-4.6':      'glm-4-plus',
-  'glm-4.7':      'glm-4-plus',
-  'glm-4.7-flash':'glm-4-flash',
-  'glm-z1-air':   'glm-z1-air',
-  'glm-z1-flash': 'glm-z1-flash',
+  'glm-5':         'glm-4-plus',
+  'glm-5.2':       'glm-4-plus',
+  'glm-4.6':       'glm-4-plus',
+  'glm-4.7':       'glm-4-plus',
+  'glm-4.7-flash': 'glm-4-flash',
+  'glm-z1-air':    'glm-z1-air',
+  'glm-z1-flash':  'glm-z1-flash',
   
   // === Kimi / Moonshot ===
-  'kimi-k2':      'moonshotai/Kimi-K2-Instruct',
-  'kimi-k2.6':    'kimi-k2-0711-preview',
+  'kimi-k2':       'moonshot-v1-8k',                    // Kimi K2 在 Moonshot
+  'kimi-k2.6':     'moonshot-v1-8k',
   'moonshot-v1-8k':   'moonshot-v1-8k',
   'moonshot-v1-32k':  'moonshot-v1-32k',
   'moonshot-v1-128k': 'moonshot-v1-128k',
   
-  // === 字节豆包（火山 endpoint 待主人建）===
-  'doubao-pro':  'ep-20240620-doubao-pro-32k',
-  'doubao-lite': 'ep-20240620-doubao-lite-32k',
+  // === 字节豆包（待主人建 endpoint） ===
+  'doubao-pro':    'deepseek-ai/DeepSeek-V4-Flash',     // 兜底
+  'doubao-lite':   'Qwen/Qwen2.5-7B-Instruct',
   
   // === 百川 ===
-  'baichuan-4':     'Baichuan4-Turbo',
-  'baichuan-4-air': 'Baichuan4-Air',
+  'baichuan-4':      'Baichuan4-Turbo',
+  'baichuan-4-air':  'Baichuan4-Air',
   
-  // === 阶跃 ===
-  'step-2':        'step-2-16k',
-  'step-2-mini':   'step-2-mini',
-  'step-3-flash':  'step-1-8k',
-  'step-3.7-flash':'step-1-8k',
+  // === 阶跃（实测 4 个真支持） ===
+  'step-2':         'step-1-8k',                         // step-2 不在硅基，用 step-1
+  'step-2-mini':    'step-2-mini',
+  'step-3-flash':   'step-1-8k',
+  'step-3.7-flash': 'step-1-8k',
   
-  // === Mimo ===
-  'mimo-v2.5-pro':  'Qwen/Qwen3-235B-A22B-Instruct-2507',
+  // === Mimo (虾内部 model 名) ===
+  'mimo-v2.5-pro':  'Qwen/Qwen2.5-72B-Instruct',
   
-  // === MiniMax M 系列（虾的模型） ===
+  // === MiniMax M 系列（虾的模型） — 实际背后是 V4 Flash ===
   'minimax-m3':     'deepseek-ai/DeepSeek-V4-Flash',
   'minimax-m2.7':   'deepseek-ai/DeepSeek-V4-Flash',
   
-  // === Mistral / Llama ===
-  'mistral-large':  'mistralai/mistral-large-latest',
-  'llama-3.3-70b':  'meta-llama/llama-3.3-70b-instruct',
+  // === Mistral / Llama（硅基不可用，兜底到 Qwen） ===
+  'mistral-large':  'Qwen/Qwen2.5-32B-Instruct',
+  'llama-3.3-70b':  'Qwen/Qwen2.5-72B-Instruct',
   
-  // === Passthrough: NewAPI 认识的所有 model 原样转发 ===
-  'deepseek-ai/DeepSeek-V4-Flash': 'deepseek-ai/DeepSeek-V4-Flash',
-  'Qwen/Qwen3-235B-A22B-Instruct-2507': 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-  'Qwen/Qwen3-Coder-480B-A35B-Instruct': 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-  'THUDM/glm-4-9b-chat': 'THUDM/glm-4-9b-chat',
+  // === Passthrough: NewAPI 认识的所有真支持 model 原样转发 ===
+  'deepseek-ai/DeepSeek-V4-Flash':    'deepseek-ai/DeepSeek-V4-Flash',
+  'deepseek-ai/DeepSeek-V3':          'deepseek-ai/DeepSeek-V3',
+  'Qwen/Qwen3-32B':                   'Qwen/Qwen3-32B',
+  'Qwen/Qwen2.5-7B-Instruct':         'Qwen/Qwen2.5-7B-Instruct',
+  'Qwen/Qwen2.5-32B-Instruct':        'Qwen/Qwen2.5-32B-Instruct',
+  'Qwen/Qwen2.5-72B-Instruct':        'Qwen/Qwen2.5-72B-Instruct',
+  'Pro/Qwen/Qwen2.5-7B-Instruct':     'Pro/Qwen/Qwen2.5-7B-Instruct',
+  'Pro/deepseek-ai/DeepSeek-V3':      'Pro/deepseek-ai/DeepSeek-V3',
   'glm-4-flash': 'glm-4-flash',
   'glm-4-plus':  'glm-4-plus',
   'glm-4-air':   'glm-4-air',
@@ -105,30 +112,34 @@ const MODEL_MAP = {
   'glm-4v-plus': 'glm-4v-plus',
   'Baichuan4-Turbo': 'Baichuan4-Turbo',
   'Baichuan4-Air':   'Baichuan4-Air',
+  'Baichuan4-Turbo-128k': 'Baichuan4-Turbo-128k',
+  'Baichuan4-Air-128k':   'Baichuan4-Air-128k',
   'step-1-8k':       'step-1-8k',
-  'step-1-flash':    'step-1-flash',
-  'step-2-16k':      'step-2-16k',
+  'step-1-32k':      'step-1-32k',
   'step-2-mini':     'step-2-mini',
+  'step-2-16k':      'step-2-16k',
+  'moonshot-v1-8k':     'moonshot-v1-8k',
+  'moonshot-v1-32k':    'moonshot-v1-32k',
+  'moonshot-v1-128k':   'moonshot-v1-128k',
+  'moonshot-v1-auto':   'moonshot-v1-auto',
+  'kimi-k2-0711-preview': 'kimi-k2-0711-preview',
 };
 
-// 默认 fallback：未识别的 model → 用这个稳定的（便宜快）
+// 默认 fallback：未识别的 model → 用智谱 glm-4-flash（最稳定 + 便宜）
 const DEFAULT_FALLBACK = 'glm-4-flash';
 
 function resolveModel(requestedModel) {
-  // 1. 直接映射
   if (MODEL_MAP[requestedModel]) return MODEL_MAP[requestedModel];
-  // 2. 模糊匹配（按系列）
   const lower = (requestedModel || '').toLowerCase();
   if (lower.includes('deepseek')) return 'deepseek-ai/DeepSeek-V4-Flash';
-  if (lower.includes('qwen'))     return 'Qwen/Qwen3-235B-A22B-Instruct-2507';
+  if (lower.includes('qwen'))     return 'Qwen/Qwen2.5-32B-Instruct';
   if (lower.includes('glm'))      return 'glm-4-flash';
   if (lower.includes('moonshot') || lower.includes('kimi')) return 'moonshot-v1-8k';
-  if (lower.includes('step'))     return 'step-1-flash';
+  if (lower.includes('step'))     return 'step-1-8k';
   if (lower.includes('baichuan')) return 'Baichuan4-Turbo';
   if (lower.includes('gpt'))      return 'deepseek-ai/DeepSeek-V4-Flash';
   if (lower.includes('claude') || lower.includes('opus') || lower.includes('sonnet')) return 'glm-4-flash';
   if (lower.includes('gemini'))   return 'glm-4-flash';
-  // 3. 默认
   return DEFAULT_FALLBACK;
 }
 
@@ -141,7 +152,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const NEWAPI_URL = process.env.NEWAPI_URL;
-  const NEWAPI_KEY = process.env.NEWAPI_KEY;
+  const NEWAPI_KEY = proces…KEY;
   if (!NEWAPI_URL || !NEWAPI_KEY) {
     console.error('Missing NEWAPI_URL or NEWAPI_KEY env var');
     return res.status(500).json({ error: 'Server misconfigured (missing NewAPI env)' });
