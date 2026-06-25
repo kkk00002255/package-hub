@@ -74,8 +74,8 @@ const MODEL_MAP = {
   // === 阶跃 ===
   'step-2':        'step-2-16k',
   'step-2-mini':   'step-2-mini',
-  'step-3-flash':  'step-1-flash',
-  'step-3.7-flash':'step-1-flash',
+  'step-3-flash':  'step-1-8k',
+  'step-3.7-flash':'step-1-8k',
   
   // === Mimo ===
   'mimo-v2.5-pro':  'Qwen/Qwen3-235B-A22B-Instruct-2507',
