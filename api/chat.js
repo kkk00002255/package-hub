@@ -81,8 +81,8 @@ const MODEL_MAP = {
   'mimo-v2.5-pro':  'Qwen/Qwen3-235B-A22B-Instruct-2507',
   
   // === MiniMax M 系列（虾的模型） ===
-  'minimax-m3':     'Pro/minimax/MiniMax-M2',
-  'minimax-m2.7':   'Pro/minimax/MiniMax-M2',
+  'minimax-m3':     'deepseek-ai/DeepSeek-V4-Flash',
+  'minimax-m2.7':   'deepseek-ai/DeepSeek-V4-Flash',
   
   // === Mistral / Llama ===
   'mistral-large':  'mistralai/mistral-large-latest',
@@ -109,11 +109,10 @@ const MODEL_MAP = {
   'step-1-flash':    'step-1-flash',
   'step-2-16k':      'step-2-16k',
   'step-2-mini':     'step-2-mini',
-  'Pro/minimax/MiniMax-M2': 'Pro/minimax/MiniMax-M2',
 };
 
 // 默认 fallback：未识别的 model → 用这个稳定的（便宜快）
-const DEFAULT_FALLBACK = 'deepseek-ai/DeepSeek-V4-Flash';
+const DEFAULT_FALLBACK = 'glm-4-flash';
 
 function resolveModel(requestedModel) {
   // 1. 直接映射
