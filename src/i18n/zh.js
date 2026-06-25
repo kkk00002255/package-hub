@@ -242,4 +242,5 @@ export default {
 'common.rename': '重命名',
 'common.send': '发送',
 'common.flagship': '旗舰',
+  'insp.startChat': '开始对话',
 }
