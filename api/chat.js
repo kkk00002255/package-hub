@@ -1,22 +1,29 @@
 // api/chat.js
-// /api/chat 端点 — Package 站 chat 统一入口
-// 支持多上游 + 智能路由 + failover
-// Owner: 虾 | 重写 2026-06-24 (从 DeepSeek 单源改为多源架构)
+// /api/chat 端点 — Package 站 chat 统一入口（thin forward 到 NewAPI）
+// Owner: 虾 | 2026-06-25 改版：把上游管理交给 NewAPI，Vercel Function 只做转发 + token 隐藏
+//
+// 配置（Vercel Dashboard → Settings → Environment Variables）：
+//   NEWAPI_URL  = NewAPI 公网地址（例：http://124.220.63.115）
+//   NEWAPI_KEY  = NewAPI business token（48 字符，从 /api/token/new 创建）
 
-import { callWithFailover, MODEL_ROUTING } from './_lib/router.js';
-
-const MAX_INPUT_CHARS = 8000;
-const MAX_TOKENS_CAP = 4000;
-const TIMEOUT_MS = 90000; // 视频/推理模型可能更慢
+const MAX_INPUT_CHARS = 16000;  // 比之前更大（NewAPI 上限）
+const TIMEOUT_MS = 60000;       // 60s 超时（NewAPI 内含 failover）
 
 export default async function handler(req, res) {
-  // CORS — Package 站是公开营销站，前端允许任意源
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const NEWAPI_URL = process.env.NEWAPI_URL;
+  const NEWAPI_KEY = process.env.NEWAPI_KEY;
+  if (!NEWAPI_URL || !NEWAPI_KEY) {
+    console.error('Missing NEWAPI_URL or NEWAPI_KEY env var');
+    return res.status(500).json({ error: 'Server misconfigured (missing NewAPI env)' });
+  }
 
   // 解析 body
   let body = req.body;
@@ -38,47 +45,65 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: `Input too long. Max ${MAX_INPUT_CHARS} chars.` });
   }
 
-  const requestedModel = body.model || 'deepseek-v4-flash';
-  // Reasoning 模型需要更多 token — 默认给 4000
-  const maxTokens = Math.min(MAX_TOKENS_CAP, Number(body.max_tokens) || 4000);
+  const requestedModel = body.model || 'deepseek-ai/DeepSeek-V4-Flash';
 
   // 用户地区（多平台兼容）
-  // 默认 'CN'（Package 站主用户是国内）
   const country =
-    req.headers['x-vercel-ip-country'] ||  // Vercel (Pro plan)
-    req.headers['cf-ipcountry'] ||          // Cloudflare
-    req.headers['x-country'] ||             // 自定义
+    req.headers['x-vercel-ip-country'] ||
+    req.headers['cf-ipcountry'] ||
+    req.headers['x-country'] ||
     'CN';
 
   try {
-    const { data, candidate } = await callWithFailover(requestedModel, messages, {
-      maxTokens,
-      temperature: body.temperature ?? 0.7,
-      country,
-      timeoutMs: 25000,  // 每个上游 25s 超时，避免 Vercel Function 总耗时超限
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+    const upstreamResp = await fetch(`${NEWAPI_URL}/v1/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${NEWAPI_KEY}`,
+      },
+      body: JSON.stringify({
+        model: requestedModel,
+        messages,
+        max_tokens: Math.min(8000, Number(body.max_tokens) || 4000),
+        temperature: body.temperature ?? 0.7,
+        stream: false,
+      }),
+      signal: controller.signal,
     });
 
-    // 如果主候还有更多备选可试，可以继续重试——但目前一个成功就返回
+    clearTimeout(timeoutId);
+
+    const data = await upstreamResp.json();
+
+    if (!upstreamResp.ok || data.error) {
+      console.error('NewAPI error:', JSON.stringify(data).slice(0, 500));
+      return res.status(upstreamResp.status).json({
+        error: data.error?.message || 'Upstream error',
+        requestedModel,
+        country,
+      });
+    }
 
     const msg = data.choices?.[0]?.message;
-    // Reasoning 模型 (Zhipu GLM-5.x, Kimi K2.6, etc.) 会先输出 reasoning_content，再输出 content
-    // 如果 content 空但 reasoning_content 有内容，fallback 到 reasoning_content
     let out = msg?.content;
     if (!out && msg?.reasoning_content) {
       out = msg.reasoning_content;
     }
     if (!out) {
-      console.error('Upstream returned no content', JSON.stringify(data).slice(0, 500));
+      console.error('NewAPI returned no content', JSON.stringify(data).slice(0, 500));
       return res.status(502).json({ error: 'No output from model' });
     }
 
     return res.status(200).json({
       result: out.trim(),
-      upstream: candidate.upstream,
-      upstreamModel: candidate.model,
+      requestedModel,
+      actualModel: data.model,
       country,
-      // 成本（仅供参考）
-      costUSDPerMTokens: candidate.costUSD,
+      // 新版：NewAPI 已自动选最佳上游，前端不用知道
+      usage: data.usage,
     });
   } catch (e) {
     console.error('Chat error:', e.message);
@@ -86,10 +111,6 @@ export default async function handler(req, res) {
       error: e.message,
       requestedModel,
       country,
-      // DEBUG: 返回详细错误方便诊断
-      debugErrors: e.message.includes('All upstreams failed') 
-        ? e.message 
-        : undefined,
     });
   }
 }
