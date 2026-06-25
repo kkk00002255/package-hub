@@ -76,12 +76,15 @@ function pickModel(kind) {
           class="tile mb-4 break-inside-avoid group cursor-pointer relative overflow-hidden rounded-2xl"
           :style="{ aspectRatio: i % 5 === 0 ? '3/4' : i % 4 === 0 ? '4/5' : i % 3 === 0 ? '1/1' : '4/3' }"
         >
-          <!-- 真实图（picsum）/ 渐变 fallback -->
-          <img v-if="tile.image" :src="tile.image" :alt="tile.title" loading="lazy"
-               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-          <div v-else class="absolute inset-0 bg-gradient-to-br transition-transform duration-500 group-hover:scale-110" :class="tile.gradient"></div>
+          <!-- 真实图（picsum 兜底 / gradient 渐变） -->
+          <div class="absolute inset-0 bg-gradient-to-br transition-transform duration-500 group-hover:scale-110" :class="tile.gradient"></div>
+          <div class="absolute inset-0 opacity-[0.06] mix-blend-overlay pointer-events-none" style="background-image:radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 6px 6px;"></div>
+          <!-- 装饰 emoji 浮标（让 demo 更生动） -->
+          <div class="absolute inset-0 flex items-center justify-center text-5xl sm:text-6xl opacity-30 group-hover:opacity-50 transition-opacity">
+            {{ tile.kind === 'image' ? '🎨' : tile.kind === 'video' ? '🎬' : tile.kind === 'music' ? '🎵' : tile.kind === 'voice' ? '🎙' : '✨' }}
+          </div>
           <!-- 渐变叠加（让图更有质感） -->
-          <div class="absolute inset-0 bg-gradient-to-br from-black/10 via-transparent to-black/30 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
           <!-- subtle noise -->
           <div class="absolute inset-0 opacity-[0.06] mix-blend-overlay pointer-events-none" style="background-image:radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 6px 6px;"></div>
 
