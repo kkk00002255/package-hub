@@ -230,8 +230,9 @@ export default {
   'common.flagship': '★',
   'common.send': '发送',
   'common.lang.en': 'EN',
-  'common.lang.zh': '中'
-// v2: TryView 改版新增
+  'common.lang.zh': '中',
+
+  // v2: TryView 改版新增
 'try.newChat': '新对话',
 'try.pickModel': '切换模型',
 'try.actualModel': '通过 {m}',
