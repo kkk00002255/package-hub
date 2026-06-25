@@ -232,3 +232,13 @@ export default {
   'common.lang.en': 'EN',
   'common.lang.zh': '中'
 }
+// v2: TryView 改版新增
+'try.newChat': '新对话',
+'try.pickModel': '切换模型',
+'try.actualModel': '通过 {m}',
+'try.regen': '重新生成',
+'common.copy': '复制',
+'common.delete': '删除',
+'common.rename': '重命名',
+'common.send': '发送',
+'common.flagship': '旗舰',
