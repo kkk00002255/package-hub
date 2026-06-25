@@ -125,7 +125,7 @@ function pickModel(kind) {
         <router-link to="/try" class="btn btn-primary text-sm">
           <MessageSquare class="h-4 w-4" />
           {{ t('insp.startChat') }}
-        </routerLink>
+        </router-link>
       </div>
     </div>
   </section>
