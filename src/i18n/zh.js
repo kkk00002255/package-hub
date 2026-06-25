@@ -231,7 +231,6 @@ export default {
   'common.send': '发送',
   'common.lang.en': 'EN',
   'common.lang.zh': '中'
-}
 // v2: TryView 改版新增
 'try.newChat': '新对话',
 'try.pickModel': '切换模型',
@@ -242,3 +241,4 @@ export default {
 'common.rename': '重命名',
 'common.send': '发送',
 'common.flagship': '旗舰',
+}
