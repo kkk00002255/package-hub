@@ -482,16 +482,22 @@ function onModelChange() {
             <!-- Model picker (桌面端可见) -->
             <div class="flex items-center gap-2 flex-1 sm:flex-initial min-w-0 max-w-full">
               <label class="text-[10px] uppercase tracking-wider text-ink-500 shrink-0 hidden md:inline">{{ t('try.pickModel') }}</label>
-              <select
-                v-model="selectedId"
-                @change="onModelChange"
-                class="flex-1 sm:flex-initial min-w-0 max-w-[280px] sm:max-w-[340px] px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.07] cursor-pointer">
-                <optgroup v-for="g in grouped" :key="g.id" :label="g.label">
-                  <option v-for="m in g.items" :key="m.id" :value="m.id">
-                    {{ m.name }}{{ m.tier === 'flagship' ? ' ★' : '' }}{{ m.status === 'overseas' ? ' (海外)' : m.status === 'demo' ? ' (demo)' : m.status === 'coming-soon' ? ' (即将)' : '' }}
-                  </option>
-                </optgroup>
-              </select>
+              <div class="relative flex-1 sm:flex-initial min-w-0 max-w-[280px] sm:max-w-[340px]">
+                <select
+                  v-model="selectedId"
+                  @change="onModelChange"
+                  class="w-full appearance-none pl-3 pr-8 py-1.5 rounded-lg bg-zinc-900/80 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:bg-zinc-900 cursor-pointer hover:bg-zinc-800/80 transition"
+                  style="color-scheme: dark;">
+                  <optgroup v-for="g in grouped" :key="g.id" :label="g.label" class="bg-zinc-900 text-ink-300">
+                    <option v-for="m in g.items" :key="m.id" :value="m.id" class="bg-zinc-900 text-white">
+                      {{ m.name }}{{ m.tier === 'flagship' ? ' ★' : '' }}{{ m.status === 'overseas' ? ' (海外)' : m.status === 'demo' ? ' (demo)' : m.status === 'coming-soon' ? (m.name.length > 0 ? ' (即将)' : '') : '' }}
+                    </option>
+                  </optgroup>
+                </select>
+                <svg class="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
 
             <span class="chip shrink-0" :class="isLive ? '' : 'opacity-60'">
