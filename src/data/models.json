@@ -630,6 +630,105 @@
       "tagline": "Cyberpunk / ink wash / 3D / cinematic — at will.",
       "upstream": "style-switch-agent",
       "status": "coming-soon"
+    },
+    {
+      "id": "doubao-pro",
+      "name": "Doubao Pro",
+      "vendor": "ByteDance",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "字节最强中文模型，深度推理 + 中文 NLP 一流。",
+      "upstream": "doubao-pro",
+      "status": "live",
+      "note": "字节火山 Seed 2.1 pro，推理慢（~10s）但内容质量高"
+    },
+    {
+      "id": "doubao-seed-2.1-pro",
+      "name": "Doubao Seed 2.1 Pro",
+      "vendor": "ByteDance",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "字节方舟旗舰模型，中文之王。",
+      "upstream": "doubao-seed-2.1-pro",
+      "status": "live",
+      "note": "字节火山 endpoint ep-20260625202629-brptr"
+    },
+    {
+      "id": "doubao-seed-2.1-turbo",
+      "name": "Doubao Seed 2.1 Turbo",
+      "vendor": "ByteDance",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "字节方舟 Turbo 版，速度更快，价格更低。",
+      "upstream": "doubao-seed-2.1-turbo",
+      "status": "live",
+      "note": "字节火山 endpoint ep-20260625202629-brptr"
+    },
+    {
+      "id": "doubao-seed-evolving",
+      "name": "Doubao Seed Evolving",
+      "vendor": "ByteDance",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "字节方舟最新实验版，持续进化中。",
+      "upstream": "doubao-seed-evolving",
+      "status": "live",
+      "note": "字节火山 endpoint ep-20260625202629-brptr"
+    },
+    {
+      "id": "doubao-lite",
+      "name": "Doubao Lite",
+      "vendor": "ByteDance",
+      "category": "chat",
+      "tier": "fast",
+      "tagline": "字节方舟轻量版，量大便宜。",
+      "upstream": "doubao-lite",
+      "status": "live",
+      "note": "字节火山 endpoint ep-20260625202629-brptr"
+    },
+    {
+      "id": "qwen3-32b",
+      "name": "Qwen 3 32B",
+      "vendor": "Alibaba",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "通义千问 3 代 32B 参数旗舰。",
+      "upstream": "qwen3-32b",
+      "status": "live",
+      "note": "硅基流动实测 OK：Qwen/Qwen3-32B"
+    },
+    {
+      "id": "kimi-k2",
+      "name": "Kimi K2",
+      "vendor": "Moonshot",
+      "category": "chat",
+      "tier": "flagship",
+      "tagline": "月之暗面 K2 模型，国产旗舰。",
+      "upstream": "kimi-k2",
+      "status": "live",
+      "note": "Moonshot 实测 OK：kimi-k2-0711-preview"
+    },
+    {
+      "id": "moonshot-v1-128k",
+      "name": "Moonshot V1 128K",
+      "vendor": "Moonshot",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "月之暗面 128K 长上下文。",
+      "upstream": "moonshot-v1-128k",
+      "status": "live",
+      "note": "Moonshot 实测 OK"
+    },
+    {
+      "id": "baichuan-4-turbo-128k",
+      "name": "Baichuan 4 Turbo 128K",
+      "vendor": "Baichuan",
+      "category": "chat",
+      "tier": "pro",
+      "tagline": "百川智能 4 代 Turbo 128K 长上下文。",
+      "upstream": "baichuan-4-turbo-128k",
+      "status": "live",
+      "note": "百川实测 OK"
     }
   ]
 }
