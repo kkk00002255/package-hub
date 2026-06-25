@@ -408,6 +408,10 @@ function regen() {
   input.value = msgs[lastUserIdx].text
   send()
 }
+
+function onModelChange() {
+  if (activeSession.value) activeSession.value.modelId = selectedId.value
+}
 </script>
 
 <template>
@@ -480,7 +484,7 @@ function regen() {
               <label class="text-[10px] uppercase tracking-wider text-ink-500 shrink-0 hidden md:inline">{{ t('try.pickModel') }}</label>
               <select
                 v-model="selectedId"
-                @change="if(activeSession) activeSession.modelId = selectedId"
+                @change="onModelChange"
                 class="flex-1 sm:flex-initial min-w-0 max-w-[280px] sm:max-w-[340px] px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.07] cursor-pointer">
                 <optgroup v-for="g in grouped" :key="g.id" :label="g.label">
                   <option v-for="m in g.items" :key="m.id" :value="m.id">
