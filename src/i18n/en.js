@@ -242,4 +242,5 @@ export default {
 'common.rename': 'Rename',
 'common.send': 'Send',
 'common.flagship': 'Flagship',
+  'insp.startChat': 'Start chatting',
 }
