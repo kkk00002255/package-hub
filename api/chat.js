@@ -152,7 +152,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const NEWAPI_URL = process.env.NEWAPI_URL;
-  const NEWAPI_KEY = proces…KEY;
+  const NEWAPI_KEY = process.env.NEWAPI_KEY;
   if (!NEWAPI_URL || !NEWAPI_KEY) {
     console.error('Missing NEWAPI_URL or NEWAPI_KEY env var');
     return res.status(500).json({ error: 'Server misconfigured (missing NewAPI env)' });
