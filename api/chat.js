@@ -67,7 +67,12 @@ const MODEL_MAP = {
   'moonshot-v1-128k': 'moonshot-v1-128k',
   
   // === 字节豆包（待主人建 endpoint） ===
-  'doubao-pro':    'deepseek-ai/DeepSeek-V4-Flash',     // 兜底
+  'doubao-pro':    'ep-20260625202629-brptr',           // 豆包 pro
+  'doubao-seed-2.1-pro':  'ep-20260625202629-brptr',
+  'doubao-seed-2.1-turbo': 'ep-20260625202629-brptr',
+  'doubao-seed-evolving': 'ep-20260625202629-brptr',
+  'doubao-pro-32k':       'ep-20260625202629-brptr',
+  'doubao-lite':   'ep-20260625202629-brptr',
   'doubao-lite':   'Qwen/Qwen2.5-7B-Instruct',
   
   // === 百川 ===
@@ -93,6 +98,7 @@ const MODEL_MAP = {
   
   // === Passthrough: NewAPI 认识的所有真支持 model 原样转发 ===
   'deepseek-ai/DeepSeek-V4-Flash':    'deepseek-ai/DeepSeek-V4-Flash',
+  'ep-20260625202629-brptr':                 'ep-20260625202629-brptr',
   'deepseek-ai/DeepSeek-V3':          'deepseek-ai/DeepSeek-V3',
   'Qwen/Qwen3-32B':                   'Qwen/Qwen3-32B',
   'Qwen/Qwen2.5-7B-Instruct':         'Qwen/Qwen2.5-7B-Instruct',
