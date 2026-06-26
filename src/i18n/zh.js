@@ -92,6 +92,8 @@ export default {
   'insp.title': '看看创作者用 Package 做出了什么。',
   'insp.desc': '下面每一块，都是 Package 内 100+ 模型产出的真实作品。',
   'insp.more': '加载更多灵感',
+  'insp.tryNow': '立即尝试',
+  'insp.comingSoon': '即将上线',
 
   // CTA
   'cta.eyebrow': '现在就开干',

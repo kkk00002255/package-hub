@@ -92,6 +92,8 @@ export default {
   'insp.title': 'See what creators ship with Package.',
   'insp.desc': 'Every tile below is a real output from one of the 100+ models inside Package.',
   'insp.more': 'Load more inspiration',
+  'insp.tryNow': 'Try now',
+  'insp.comingSoon': 'Coming soon',
 
   // CTA
   'cta.eyebrow': 'Start now',
