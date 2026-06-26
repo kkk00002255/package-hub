@@ -217,10 +217,10 @@ Your text: "...AI 取代论..." (Chinese essay)
 [IMAGE: lone developer silhouette at a glowing terminal in a dark server room, rows of cold blue LED racks stretching into the background, holographic AI code fragments floating in air, melancholic mood, cyberpunk cinematic style, muted teal and orange color grading
 
 User: "做一个 30s 赛博朋克 MV"
-[VIDEO: cyberpunk street chase, neon-lit vehicles weaving through rain-slicked city streets, dynamic camera follow, motion blur, glowing signs reflecting on wet asphalt, 6s scene
-[MUSIC: dark synthwave, 128 BPM, deep analog bass, gated reverb drums, atmospheric pads, 80s style]`
+[VIDEO: cyberpunk street chase, neon-lit vehicles weaving through rain-slicked city streets, dynamic camera follow, motion blur, glowing signs reflecting on wet asphalt, 6s scene]
+[MUSIC: dark synthwave, 128 BPM, deep analog bass, gated reverb drums, atmospheric pads, 80s style]
 
-You may include brief text BEFORE the blocks (intent, plan, or commentary). The blocks trigger automatic generation in the user's workspace — each IMAGE/VIDEO/MUSIC block is one generation.`
+You may include brief text BEFORE the blocks (intent, plan, or commentary). The blocks trigger automatic generation in the user's workspace — each IMAGE/VIDEO/MUSIC block is one generation.`;
 
 // === 发送消息 ===
 async function send() {
