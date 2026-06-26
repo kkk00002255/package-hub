@@ -300,12 +300,14 @@ async function sendChat() {
     // 解析 generation blocks — agent pipeline 6-26
     const { cleanText, blocks } = parseGenerationBlocks(out)
 
-    // 插入 chat 文本回复（去掉生成标记后）
-    if (cleanText) {
+    // 总是插入 chat 文本回复（让用户看到 chat 写了什么 prompt）
+    // 完整输出（含生成块）— 这样用户能看到 chat 实际写的 prompt，
+    // 生成块后面会自动渲染为图像/视频/音频
+    if (out && out.trim()) {
       activeSession.value.messages.push({
         role: 'assistant',
         kind: 'text',
-        text: cleanText,
+        text: out, // 完整输出，让用户看到 chat 写的 prompt
         reasoning: data.actualModel || data.requestedModel || '',
         streaming: false
       })
@@ -326,7 +328,7 @@ async function sendChat() {
     }
 
     // chat 输出没有任何内容也没生成块 → fallback 提示
-    if (!cleanText && blocks.length === 0) {
+    if (!out && blocks.length === 0) {
       activeSession.value.messages.push({
         role: 'assistant',
         kind: 'text',
