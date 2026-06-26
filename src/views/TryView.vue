@@ -147,6 +147,58 @@ const grouped = computed(() => {
   })).filter(c => c.items.length)
 })
 
+// === Agent pipeline (6-26 虾) ===
+// chat 模型可以输出 [IMAGE: ...] / [VIDEO: ...] / [MUSIC: ...] 块，
+// TryView 自动接力给对应类别的默认模型。实现工作区多模型上下文共享。
+function defaultModelFor(category) {
+  const pref = ['live', 'demo']
+  for (const s of pref) {
+    const m = models.models.find(x => x.category === category && x.status === s && x.upstream)
+    if (m) return m
+  }
+  return models.models.find(x => x.category === category) || null
+}
+
+// 检测 [KIND: prompt] 块，返回 [{kind, prompt}, ...] 和剥离标记后的剩余文本
+function parseGenerationBlocks(text) {
+  if (!text) return { cleanText: '', blocks: [] }
+  const blocks = []
+  let cleanText = text
+  for (const kind of ['IMAGE', 'VIDEO', 'MUSIC']) {
+    const re = new RegExp(`\\[${kind}:\\s*([\\s\\S]+?)\\]`, 'g')
+    let m
+    while ((m = re.exec(text)) !== null) {
+      blocks.push({ kind: kind.toLowerCase(), prompt: m[1].trim() })
+      cleanText = cleanText.replace(m[0], '').trim()
+    }
+  }
+  return { cleanText, blocks }
+}
+
+const CHAT_SYSTEM_PROMPT = `You are a creative assistant inside Package — an all-in-one AI workspace where users can switch between Chat, Image, Video and Music models.
+
+When the user asks for a generation (image / video / music), output a structured block in EXACTLY this format (English prompts, 50-150 words each):
+
+\`\`\`
+[IMAGE: <vivid visual prompt: subject, lighting, composition, style, mood, color palette>]
+\`\`\`
+
+or
+
+\`\`\`
+[VIDEO: <motion/scene prompt: subject, action, camera movement, 5-10s scene, atmosphere>]
+\`\`\`
+
+or
+
+\`\`\`
+[MUSIC: <music prompt: genre, mood, tempo BPM, instruments, optional vocal style or lyrics>]
+\`\`\`
+
+For text-only questions (writing, analysis, coding, Q&A, etc.), answer normally WITHOUT any [IMAGE/VIDEO/MUSIC] block.
+
+You may include brief text BEFORE the block (intent, plan, or commentary), and the block triggers automatic generation in the user's workspace.`
+
 // === 发送消息 ===
 async function send() {
   const text = input.value.trim()
@@ -189,16 +241,29 @@ async function send() {
 }
 
 async function sendChat() {
+  // 历史记录：把 image/video/audio 的存在告诉 chat（多模态上下文）
   const history = activeSession.value.messages
     .filter(m => m.role === 'user' || m.role === 'assistant')
-    .map(m => ({ role: m.role, content: m.text }))
+    .map(m => {
+      if (m.role === 'user') return { role: 'user', content: m.text }
+      let content = m.text || ''
+      const tags = []
+      if (m.image) tags.push('[上面生成了一张图片]')
+      if (m.video) tags.push('[上面生成了一个视频]')
+      if (m.audio) tags.push('[上面生成了一段音频]')
+      if (tags.length) content += (content ? '\n\n' : '') + tags.join(' ')
+      return { role: 'assistant', content }
+    })
+
+  // 注入 system prompt（让 chat 学会输出生成标记）
+  const messages = [{ role: 'system', content: CHAT_SYSTEM_PROMPT }, ...history]
 
   try {
     const r = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: history,
+        messages,
         model: activeModel.value.upstream
       })
     })
@@ -207,16 +272,49 @@ async function sendChat() {
     try { data = await r.json() } catch { throw new Error('Invalid response from server') }
     if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
 
-    const out = data.result || data.reasoning_content || t('try.empty')
-    activeSession.value.messages.push({
-      role: 'assistant',
-      text: out,
-      reasoning: data.actualModel || data.requestedModel || '',
-      streaming: false
-    })
+    const out = data.result || data.reasoning_content || ''
+
+    // 解析 generation blocks — agent pipeline 6-26
+    const { cleanText, blocks } = parseGenerationBlocks(out)
+
+    // 插入 chat 文本回复（去掉生成标记后）
+    if (cleanText) {
+      activeSession.value.messages.push({
+        role: 'assistant',
+        kind: 'text',
+        text: cleanText,
+        reasoning: data.actualModel || data.requestedModel || '',
+        streaming: false
+      })
+    }
+
+    // 自动接力：按顺序调 image / video / music（每个 block 独立生成）
+    for (const block of blocks) {
+      if (block.kind === 'image') {
+        const m = defaultModelFor('image')
+        if (m) await sendImage(block.prompt, m, true)
+      } else if (block.kind === 'video') {
+        const m = defaultModelFor('video')
+        if (m) await sendVideo(block.prompt, m, true)
+      } else if (block.kind === 'music') {
+        const m = defaultModelFor('music')
+        if (m) await sendAudio(block.prompt, m, true)
+      }
+    }
+
+    // chat 输出没有任何内容也没生成块 → fallback 提示
+    if (!cleanText && blocks.length === 0) {
+      activeSession.value.messages.push({
+        role: 'assistant',
+        kind: 'text',
+        text: t('try.empty'),
+        reasoning: data.actualModel || data.requestedModel || ''
+      })
+    }
   } catch (e) {
     activeSession.value.messages.push({
       role: 'assistant',
+      kind: 'text',
       text: `⚠️ ${e.message || t('try.error')}`,
       error: true
     })
@@ -226,35 +324,49 @@ async function sendChat() {
   }
 }
 
-async function sendImage(prompt) {
+async function sendImage(prompt, modelOverride = null, inPipeline = false) {
+  const m = modelOverride || activeModel.value
   try {
+    activeSession.value.messages.push({
+      role: 'assistant',
+      kind: 'image-loading',
+      text: `🎨 正在用 ${m.name} 生成图片...`,
+      muted: true
+    })
     const r = await fetch('/api/image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, model: activeModel.value.upstream, size: '1024x1024', n: 1 })
+      body: JSON.stringify({ prompt, model: m.upstream, size: '1024x1024', n: 1 })
     })
     const data = await r.json()
     if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
     if (data.images?.length) {
       activeSession.value.messages.push({
         role: 'assistant',
+        kind: 'image',
         text: `Generated image [${data.model}]:`,
         image: data.images[0].url || data.images[0]
       })
     } else {
-      activeSession.value.messages.push({ role: 'assistant', text: t('try.empty') })
+      activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: t('try.empty') })
     }
   } catch (e) {
-    activeSession.value.messages.push({ role: 'assistant', text: `⚠️ ${e.message || t('try.error')}`, error: true })
+    activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: `⚠️ ${e.message || t('try.error')}`, error: true })
   } finally {
-    sending.value = false
+    if (!inPipeline) sending.value = false
     nextTick(scrollToBottom)
   }
 }
 
-async function sendVideo(prompt) {
+async function sendVideo(prompt, modelOverride = null, inPipeline = false) {
+  const m = modelOverride || activeModel.value
   try {
-    activeSession.value.messages.push({ role: 'assistant', text: '🎬 正在生成 5 秒视频 (需 30-90 秒)...', muted: true })
+    activeSession.value.messages.push({
+      role: 'assistant',
+      kind: 'video-loading',
+      text: `🎬 正在用 ${m.name} 生成 5 秒视频 (需 30-90 秒)...`,
+      muted: true
+    })
     let inputImage = null
     for (let i = activeSession.value.messages.length - 1; i >= 0; i--) {
       if (activeSession.value.messages[i].image) { inputImage = activeSession.value.messages[i].image; break }
@@ -262,45 +374,53 @@ async function sendVideo(prompt) {
     const r = await fetch('/api/video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, model: activeModel.value.upstream, image: inputImage, frames: 60, fps: 12, duration: 5 })
+      body: JSON.stringify({ prompt, model: m.upstream, image: inputImage, frames: 60, fps: 12, duration: 5 })
     })
     const data = await r.json()
     if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
     if (data.videos?.length) {
       activeSession.value.messages.push({
         role: 'assistant',
+        kind: 'video',
         text: `Generated video [${data.model}]:`,
         video: data.videos[0].url || data.videos[0]
       })
     } else {
-      activeSession.value.messages.push({ role: 'assistant', text: t('try.empty') })
+      activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: t('try.empty') })
     }
   } catch (e) {
-    activeSession.value.messages.push({ role: 'assistant', text: `⚠️ ${e.message || t('try.error')}`, error: true })
+    activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: `⚠️ ${e.message || t('try.error')}`, error: true })
   } finally {
-    sending.value = false
+    if (!inPipeline) sending.value = false
     nextTick(scrollToBottom)
   }
 }
 
-async function sendAudio(text) {
+async function sendAudio(text, modelOverride = null, inPipeline = false) {
+  const m = modelOverride || activeModel.value
   try {
+    activeSession.value.messages.push({
+      role: 'assistant',
+      kind: 'audio-loading',
+      text: `🎵 正在用 ${m.name} 生成音频...`,
+      muted: true
+    })
     const r = await fetch('/api/audio', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, model: activeModel.value.upstream })
+      body: JSON.stringify({ text, model: m.upstream })
     })
     const data = await r.json()
     if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`)
     if (data.audio) {
-      activeSession.value.messages.push({ role: 'assistant', text: `Generated audio [${data.model}]:`, audio: data.audio })
+      activeSession.value.messages.push({ role: 'assistant', kind: 'audio', text: `Generated audio [${data.model}]:`, audio: data.audio })
     } else {
-      activeSession.value.messages.push({ role: 'assistant', text: t('try.empty') })
+      activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: t('try.empty') })
     }
   } catch (e) {
-    activeSession.value.messages.push({ role: 'assistant', text: `⚠️ ${e.message || t('try.error')}`, error: true })
+    activeSession.value.messages.push({ role: 'assistant', kind: 'text', text: `⚠️ ${e.message || t('try.error')}`, error: true })
   } finally {
-    sending.value = false
+    if (!inPipeline) sending.value = false
     nextTick(scrollToBottom)
   }
 }
@@ -540,7 +660,11 @@ function onModelChange() {
                                 m.error ? 'bg-red-500/10 border border-red-500/30 text-red-200'
                                         : m.muted ? 'bg-white/3 border border-white/5 text-ink-400 italic'
                                         : 'bg-white/[0.06] border border-white/10 text-ink-100']">
-                    <div v-html="renderMd(m.text)"></div>
+                    <div v-if="m.kind && m.kind.endsWith('-loading')" class="flex items-center gap-2">
+                      <Loader2 class="h-3.5 w-3.5 animate-spin" />
+                      <span v-html="renderMd(m.text)"></span>
+                    </div>
+                    <div v-else v-html="renderMd(m.text)"></div>
                     <img v-if="m.image" :src="m.image" alt="generated" class="mt-2 rounded-lg max-w-full border border-white/10" />
                     <video v-if="m.video" :src="m.video" controls class="mt-2 rounded-lg max-w-full border border-white/10"></video>
                     <audio v-if="m.audio" :src="m.audio" controls class="mt-2 w-full"></audio>
