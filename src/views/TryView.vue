@@ -160,12 +160,14 @@ function defaultModelFor(category) {
 }
 
 // 检测 [KIND: prompt] 块，返回 [{kind, prompt}, ...] 和剥离标记后的剩余文本
+// 兼容 ASCII : 和中文 ：（模型可能输出中英文标点）
 function parseGenerationBlocks(text) {
   if (!text) return { cleanText: '', blocks: [] }
   const blocks = []
   let cleanText = text
   for (const kind of ['IMAGE', 'VIDEO', 'MUSIC']) {
-    const re = new RegExp(`\\[${kind}:\\s*([\\s\\S]+?)\\]`, 'g')
+    // [KIND: ...] 或 [KIND：...]
+    const re = new RegExp(`\\[${kind}\\s*[:\：]\\s*([\\s\\S]+?)\\]`, 'g')
     let m
     while ((m = re.exec(text)) !== null) {
       blocks.push({ kind: kind.toLowerCase(), prompt: m[1].trim() })
@@ -177,27 +179,48 @@ function parseGenerationBlocks(text) {
 
 const CHAT_SYSTEM_PROMPT = `You are a creative assistant inside Package — an all-in-one AI workspace where users can switch between Chat, Image, Video and Music models.
 
-When the user asks for a generation (image / video / music), output a structured block in EXACTLY this format (English prompts, 50-150 words each):
+CRITICAL RULES for generation prompts:
+1. Output language: PROMPTS INSIDE THE BLOCK MUST BE IN ENGLISH (image/video/music models are optimized for English).
+2. When the user asks for a generation that SUPPORTS YOUR TEXT ANALYSIS above, the prompt must VISUALIZE / EXTEND the subject of your analysis — NOT a generic stock photo. Pick a concrete scene, angle, style, mood that reflects the actual topic.
+3. For standalone requests ("make me a sunset"), interpret creatively.
+4. Length: 50-150 words. Be specific: subject, lighting, composition, camera, style, mood, color palette.
+5. NEVER just paraphrase the user's question. Translate the IDEA into a concrete visual/audio scene.
+
+OUTPUT FORMAT (use exactly these markers):
 
 \`\`\`
-[IMAGE: <vivid visual prompt: subject, lighting, composition, style, mood, color palette>]
+[IMAGE: <vivid visual prompt — subject, lighting, composition, style, mood, color palette, 50-150 words>]
 \`\`\`
 
 or
 
 \`\`\`
-[VIDEO: <motion/scene prompt: subject, action, camera movement, 5-10s scene, atmosphere>]
+[VIDEO: <motion/scene prompt — subject, action, camera movement, 5-10s scene, atmosphere, 50-150 words>]
 \`\`\`
 
 or
 
 \`\`\`
-[MUSIC: <music prompt: genre, mood, tempo BPM, instruments, optional vocal style or lyrics>]
+[MUSIC: <music prompt — genre, mood, tempo BPM, instruments, optional vocal style or lyrics>]
 \`\`\`
 
-For text-only questions (writing, analysis, coding, Q&A, etc.), answer normally WITHOUT any [IMAGE/VIDEO/MUSIC] block.
+For text-only questions (writing, analysis, coding, Q&A, etc.), answer normally WITHOUT any block.
 
-You may include brief text BEFORE the block (intent, plan, or commentary), and the block triggers automatic generation in the user's workspace.`
+EXAMPLES — DO NOT COPY VERBATIM, just use the structure:
+
+User: "分析广州房地产趋势, 然后配一张图"
+Your text: "广州天河区珠江新城均价 8.5万/㎡..." (Chinese analysis, normal)
+[IMAGE: aerial drone view of Zhujiang New Town CBD in Guangzhou at golden hour, gleaming glass skyscrapers reflecting warm sunset light, Pearl River curving in foreground, modern residential towers in mid-ground, misty mountains on horizon, cinematic composition, 8K photography]
+
+User: "写一段关于AI取代程序员的悲观未来, 配个图"
+Your text: "...AI 取代论..." (Chinese essay)
+[IMAGE: lone developer silhouette at a glowing terminal in a dark server room, rows of cold blue LED racks stretching into the background, holographic AI code fragments floating in air, melancholic mood, cyberpunk cinematic style, muted teal and orange color grading
+
+User: "做一个 30s 赛博朋克 MV"
+[VIDEO: cyberpunk street chase, neon-lit vehicles weaving through rain-slicked city streets, dynamic camera follow, motion blur, glowing signs reflecting on wet asphalt, 6s scene
+[MUSIC: dark synthwave, 128 BPM, deep analog bass, gated reverb drums, atmospheric pads, 80s style]`
+
+You may include brief text BEFORE the blocks (intent, plan, or commentary). The blocks trigger automatic generation in the user's workspace — each IMAGE/VIDEO/MUSIC block is one generation.`
 
 // === 发送消息 ===
 async function send() {
