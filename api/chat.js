@@ -11,6 +11,9 @@
 
 const MAX_INPUT_CHARS = 16000;
 const TIMEOUT_MS = 60000;
+const STREAM_FIRST_TOKEN_MS = 8000; // 流式首 token 超时（看到首字就用这么久）
+const DEFAULT_MAX_TOKENS = 2000;    // 2026-06-26 虾: 8000→2000 避免长输出撞 60s abort
+const HARD_MAX_TOKENS = 4000;       // 客户端可以请求更高，但硬上限 4000
 
 // 模型映射：前端 ID → NewAPI 实际 model name
 // 实测 6-25 14:53 所有可用的 model
@@ -191,9 +194,18 @@ export default async function handler(req, res) {
     req.headers['x-country'] ||
     'CN';
 
+  // 流式开关：客户端可发 stream: true 请求流式响应（SSE）
+  // 流式体验：第一 token 8s 限时，整体仍受 TIMEOUT_MS 60s 兜底
+  const stream = body.stream === true;
+
+  // max_tokens 默认 2000（6-26 虾下调）— 8000 太容易撞 60s abort
+  const requestedMax = Number(body.max_tokens) || DEFAULT_MAX_TOKENS;
+  const maxTokens = Math.min(HARD_MAX_TOKENS, Math.max(64, requestedMax));
+
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    let timeoutId = null;
+    timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
     const upstreamResp = await fetch(`${NEWAPI_URL}/v1/chat/completions`, {
       method: 'POST',
@@ -204,21 +216,79 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: resolvedModel,
         messages,
-        max_tokens: Math.min(8000, Number(body.max_tokens) || 4000),
+        max_tokens: maxTokens,
         temperature: body.temperature ?? 0.7,
-        stream: false,
+        stream,
       }),
       signal: controller.signal,
     });
 
     clearTimeout(timeoutId);
 
+    if (!upstreamResp.ok) {
+      // 上游 HTTP 错误 — 透传状态码 + 详细错误
+      let errPayload = {};
+      try { errPayload = await upstreamResp.json(); } catch {}
+      const errMsg = errPayload.error?.message || `Upstream HTTP ${upstreamResp.status}`;
+      console.error('NewAPI HTTP error:', upstreamResp.status, errMsg);
+      return res.status(upstreamResp.status).json({
+        error: errMsg,
+        kind: 'upstream',
+        requestedModel,
+        resolvedModel,
+        country,
+      });
+    }
+
+    // === 流式分支：把上游 SSE 原样转给前端 + 首 token 限时 ===
+    if (stream) {
+      res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-cache, no-transform');
+      res.setHeader('X-Accel-Buffering', 'no'); // 关 nginx buffering
+
+      const reader = upstreamResp.body.getReader();
+      const decoder = new TextDecoder();
+      let firstTokenTimer = setTimeout(() => {
+        // 首 token 超时 — 主动关流，返回错误 chunk
+        controller.abort();
+        res.write(`data: ${JSON.stringify({ error: 'First token timeout', kind: 'first_token_timeout' })}\n\n`);
+        res.end();
+      }, STREAM_FIRST_TOKEN_MS);
+
+      try {
+        // 把首 token 计时器在拿到第一个非空 chunk 时清掉
+        let sawFirstToken = false;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (!sawFirstToken) {
+            const chunk = decoder.decode(value, { stream: true });
+            if (chunk.includes('"content"') && /"content"\s*:\s*"[^"]+/.test(chunk)) {
+              sawFirstToken = true;
+              clearTimeout(firstTokenTimer);
+            }
+          }
+          res.write(value);
+        }
+        clearTimeout(firstTokenTimer);
+        res.end();
+        return;
+      } catch (streamErr) {
+        clearTimeout(firstTokenTimer);
+        console.error('Stream error:', streamErr.message);
+        try { res.end(); } catch {}
+        return;
+      }
+    }
+
+    // === 非流式分支 ===
     const data = await upstreamResp.json();
 
-    if (!upstreamResp.ok || data.error) {
+    if (data.error) {
       console.error('NewAPI error:', JSON.stringify(data).slice(0, 500));
-      return res.status(upstreamResp.status).json({
+      return res.status(502).json({
         error: data.error?.message || 'Upstream error',
+        kind: 'upstream',
         requestedModel,
         resolvedModel,
         country,
@@ -232,7 +302,7 @@ export default async function handler(req, res) {
     }
     if (!out) {
       console.error('NewAPI returned no content', JSON.stringify(data).slice(0, 500));
-      return res.status(502).json({ error: 'No output from model' });
+      return res.status(502).json({ error: 'No output from model', kind: 'empty' });
     }
 
     return res.status(200).json({
@@ -244,9 +314,14 @@ export default async function handler(req, res) {
       usage: data.usage,
     });
   } catch (e) {
+    if (timeoutId) clearTimeout(timeoutId);
+    const isAbort = e.name === 'AbortError' || /aborted/i.test(e.message);
     console.error('Chat error:', e.message);
-    return res.status(500).json({
-      error: e.message,
+    return res.status(isAbort ? 504 : 500).json({
+      error: isAbort
+        ? `Request timed out after ${Math.round(TIMEOUT_MS / 1000)}s — the model took too long to respond. Try a faster model (Qwen2.5-7B-Instruct) or shorter prompt.`
+        : e.message,
+      kind: isAbort ? 'timeout' : 'server',
       requestedModel,
       resolvedModel,
       country,
